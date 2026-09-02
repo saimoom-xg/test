@@ -1,77 +1,55 @@
 <?php
 
+use App\Models\AdminOtp;
 use App\Models\User;
-use Illuminate\Support\Facades\RateLimiter;
-use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\TwoFactorAuthenticateSession;
+
+beforeEach(function () {
+    $this->withoutMiddleware(TwoFactorAuthenticateSession::class);
+});
 
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
-
     $response->assertOk();
 });
 
-test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
-
-    $response = $this->post(route('login.store'), [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
-
-    $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+test('users are redirected to login from protected page', function () {
+    $response = $this->get('/admin/dashboard');
+    $response->assertRedirect(route('login'));
 });
 
-test('users with two factor enabled are redirected to two factor challenge', function () {
-    $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
+test('users with OTP are logged in after verifying valid code', function () {
+    $user = User::factory()->create(['email' => 'otp-login@example.com']);
 
-    Features::twoFactorAuthentication([
-        'confirm' => true,
-        'confirmPassword' => true,
-    ]);
+    $this->post('/login/otp/request', [
+        'identifier' => 'otp-login@example.com',
+        'channel' => 'email',
+    ])->assertRedirect();
 
-    $user = User::factory()->withTwoFactor()->create();
+    $otp = AdminOtp::query()
+        ->where('identifier', 'otp-login@example.com')
+        ->latest('id')
+        ->firstOrFail();
 
-    $response = $this->post(route('login'), [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
+    $knownCode = '123456';
+    $otp->update(['code_hash' => Hash::make($knownCode)]);
 
-    $response->assertRedirect(route('two-factor.login'));
-    $response->assertSessionHas('login.id', $user->id);
-    $this->assertGuest();
+    $this->post('/login/otp/verify', [
+        'identifier' => 'otp-login@example.com',
+        'channel' => 'email',
+        'code' => $knownCode,
+    ])->assertRedirect();
+
+    $this->assertAuthenticatedAs($user);
 });
 
-test('users can not authenticate with invalid password', function () {
+test('users can log out via web', function () {
     $user = User::factory()->create();
+    $this->actingAs($user);
 
-    $this->post(route('login.store'), [
-        'email' => $user->email,
-        'password' => 'wrong-password',
-    ]);
+    $response = $this->post(route('logout'));
+    $response->assertRedirect('/');
 
     $this->assertGuest();
-});
-
-test('users can logout', function () {
-    $user = User::factory()->create();
-
-    $response = $this->actingAs($user)->post(route('logout'));
-
-    $response->assertRedirect(route('home'));
-
-    $this->assertGuest();
-});
-
-test('users are rate limited', function () {
-    $user = User::factory()->create();
-
-    RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
-
-    $response = $this->post(route('login.store'), [
-        'email' => $user->email,
-        'password' => 'wrong-password',
-    ]);
-
-    $response->assertTooManyRequests();
 });

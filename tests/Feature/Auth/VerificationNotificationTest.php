@@ -1,34 +1,71 @@
 <?php
 
+use App\Models\AdminOtp;
 use App\Models\User;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Support\Facades\Notification;
-use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
-beforeEach(function () {
-    $this->skipUnlessFortifyHas(Features::emailVerification());
+test('otp can be resent after cooldown', function () {
+    $user = User::factory()->create(['email' => 'resend@example.com']);
+
+    $this->postJson('/api/v1/auth/otp/request', [
+        'identifier' => 'resend@example.com',
+        'channel' => 'email',
+    ])->assertOk();
+
+    $otp = AdminOtp::query()
+        ->where('identifier', 'resend@example.com')
+        ->latest('id')
+        ->firstOrFail();
+
+    DB::table('admin_otps')->where('id', $otp->id)->update([
+        'created_at' => now()->subMinutes(2),
+    ]);
+
+    $this->postJson('/api/v1/auth/otp/request', [
+        'identifier' => 'resend@example.com',
+        'channel' => 'email',
+    ])->assertOk();
 });
 
-test('sends verification notification', function () {
-    Notification::fake();
+test('otp resend is blocked during cooldown', function () {
+    $this->postJson('/api/v1/auth/otp/request', [
+        'identifier' => 'cooldown-resend@example.com',
+        'channel' => 'email',
+    ])->assertOk();
 
-    $user = User::factory()->unverified()->create();
-
-    $this->actingAs($user)
-        ->post(route('verification.send'))
-        ->assertRedirect(route('home'));
-
-    Notification::assertSentTo($user, VerifyEmail::class);
+    $this->postJson('/api/v1/auth/otp/request', [
+        'identifier' => 'cooldown-resend@example.com',
+        'channel' => 'email',
+    ])->assertStatus(429);
 });
 
-test('does not send verification notification if email is verified', function () {
-    Notification::fake();
+test('otp is invalidated after max attempts', function () {
+    $this->postJson('/api/v1/auth/otp/request', [
+        'identifier' => 'exhausted@example.com',
+        'channel' => 'email',
+    ])->assertOk();
 
-    $user = User::factory()->create();
+    $otp = AdminOtp::query()
+        ->where('identifier', 'exhausted@example.com')
+        ->latest('id')
+        ->firstOrFail();
 
-    $this->actingAs($user)
-        ->post(route('verification.send'))
-        ->assertRedirect(route('dashboard', absolute: false));
+    $otp->update([
+        'code_hash' => Hash::make('000000'),
+        'attempts' => 4,
+        'max_attempts' => 5,
+    ]);
 
-    Notification::assertNothingSent();
+    $this->postJson('/api/v1/auth/otp/verify', [
+        'identifier' => 'exhausted@example.com',
+        'channel' => 'email',
+        'code' => '111111',
+    ])->assertStatus(422);
+
+    $this->postJson('/api/v1/auth/otp/verify', [
+        'identifier' => 'exhausted@example.com',
+        'channel' => 'email',
+        'code' => '111111',
+    ])->assertStatus(422);
 });

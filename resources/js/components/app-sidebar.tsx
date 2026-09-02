@@ -1,5 +1,14 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import {
+    Boxes,
+    CreditCard,
+    LayoutDashboard,
+    Package,
+    ShoppingCart,
+    Tag,
+    Truck,
+    Users,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -20,20 +29,45 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: LayoutDashboard,
+    },
+    {
+        title: 'Products',
+        href: '/admin/products',
+        icon: Package,
+    },
+    {
+        title: 'Categories',
+        href: '/admin/categories',
+        icon: Tag,
+    },
+    {
+        title: 'Brands',
+        href: '/admin/brands',
+        icon: Boxes,
+    },
+    {
+        title: 'Orders',
+        href: '/admin/orders',
+        icon: ShoppingCart,
+    },
+    {
+        title: 'Customers',
+        href: '/admin/customers',
+        icon: Users,
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
+        title: 'Shipping',
+        href: '#',
+        icon: Truck,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Payments',
+        href: '#',
+        icon: CreditCard,
     },
 ];
 
