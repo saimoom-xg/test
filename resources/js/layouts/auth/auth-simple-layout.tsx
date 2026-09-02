@@ -23,12 +23,16 @@ export default function AuthSimpleLayout({
                             <span className="sr-only">{title}</span>
                         </Link>
 
-                        <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-muted-foreground text-center text-sm">
-                                {description}
-                            </p>
-                        </div>
+                        {(title || description) && (
+                            <div className="space-y-2 text-center">
+                                {title && <h1 className="text-xl font-medium">{title}</h1>}
+                                {description && (
+                                    <p className="text-muted-foreground text-center text-sm">
+                                        {description}
+                                    </p>
+                                )}
+                            </div>
+                        )}
                     </div>
                     {children}
                 </div>

@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function (): void {
-    Route::inertia('login', 'auth/login')->name('login');
+    Route::get('login', function () {
+        return inertia('auth/login', [
+            'otp' => session('otp'),
+        ]);
+    })->name('login');
     Route::post('login/otp/request', [OtpLoginController::class, 'requestOtp'])->name('web.auth.otp.request');
     Route::post('login/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('web.auth.otp.verify');
 });

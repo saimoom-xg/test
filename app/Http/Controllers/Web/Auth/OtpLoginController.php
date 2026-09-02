@@ -23,7 +23,7 @@ class OtpLoginController extends Controller
         return Inertia::render('auth/login');
     }
 
-    public function requestOtp(RequestOtpRequest $request): Response
+    public function requestOtp(RequestOtpRequest $request): RedirectResponse
     {
         $identifier = $this->otp->normalizeIdentifier(
             $request->string('identifier')->toString(),
@@ -34,16 +34,15 @@ class OtpLoginController extends Controller
         if (! $this->otp->canRequest($identifier, $channel)) {
             $seconds = $this->otp->secondsUntilNextRequest($identifier, $channel);
 
-            return Inertia::render('auth/login', [
+            return back()->with([
                 'otp' => [
                     'identifier' => $identifier,
                     'channel' => $channel,
                     'resend_cooldown' => $seconds,
                     'cooldown_active' => true,
                 ],
-                'errors' => [
-                    'identifier' => [__('Please wait before requesting another code.')],
-                ],
+            ])->withErrors([
+                'identifier' => __('Please wait before requesting another code.'),
             ]);
         }
 
@@ -54,12 +53,12 @@ class OtpLoginController extends Controller
             $request->userAgent(),
         );
 
-        return Inertia::render('auth/login', [
+        return back()->with([
             'otp' => array_merge($result, ['identifier' => $identifier, 'channel' => $channel]),
         ]);
     }
 
-    public function verifyOtp(VerifyOtpRequest $request): Response|RedirectResponse
+    public function verifyOtp(VerifyOtpRequest $request): RedirectResponse
     {
         $identifier = $this->otp->normalizeIdentifier(
             $request->string('identifier')->toString(),
@@ -70,15 +69,14 @@ class OtpLoginController extends Controller
         $otp = $this->otp->verify($identifier, $channel, $request->string('code')->toString());
 
         if (! $otp) {
-            return Inertia::render('auth/login', [
+            return back()->with([
                 'otp' => [
                     'identifier' => $identifier,
                     'channel' => $channel,
                     'resend_cooldown' => 0,
                 ],
-                'errors' => [
-                    'code' => [__('Invalid or expired code.')],
-                ],
+            ])->withErrors([
+                'code' => __('Invalid or expired code.'),
             ]);
         }
 
@@ -114,6 +112,6 @@ class OtpLoginController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        return redirect()->intended('/admin');
+        return redirect()->intended('/dashboard');
     }
 }

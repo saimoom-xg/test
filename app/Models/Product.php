@@ -101,6 +101,18 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class);
     }
 
+    /** @return BelongsToMany<Tag> */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /** @return HasMany<ProductReview> */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
     public function getAvailableQuantityAttribute(): int
     {
         return max(0, $this->stock_quantity - $this->reserved_quantity);

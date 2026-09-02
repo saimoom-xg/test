@@ -136,110 +136,104 @@ export default function OtpLogin({ status }: Props) {
         <>
             <Head title="Sign in" />
 
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Icon className="h-5 w-5" />
-                        {step === 'identifier' ? 'Sign in or create an account' : 'Enter the code'}
-                    </CardTitle>
-                    <CardDescription>
+            <div className="flex flex-col gap-6 w-full">
+                <div className="flex flex-col items-center text-center space-y-2">
+                    <h1 className="text-2xl font-semibold tracking-tight">
+                        {step === 'identifier' ? 'Log in to your account' : 'Enter the code'}
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
                         {step === 'identifier'
-                            ? 'Passwordless sign-in. Enter your email or phone and we will send you a one-time code.'
-                            : `We sent a 6-digit code to ${identifier}. Enter it below to continue.`}
-                    </CardDescription>
-                </CardHeader>
+                            ? 'Enter your email or phone below to log in'
+                            : `We sent a 6-digit code to ${identifier}. Enter it below.`}
+                    </p>
+                </div>
 
-                    {step === 'identifier' ? (
-                        <form onSubmit={requestOtp}>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="identifier">Email or phone</Label>
-                                    <Input
-                                        id="identifier"
-                                        autoFocus
-                                        autoComplete="username"
-                                        placeholder="you@example.com or +15551234567"
-                                        value={identifier}
-                                        onChange={(e) => setIdentifier(e.target.value)}
-                                        required
-                                    />
-                                    <InputError message={error} />
-                                </div>
-                                <p className="text-muted-foreground text-xs">
-                                    No account yet? We will create one automatically — no separate sign-up needed.
-                                </p>
-                                {status ? (
-                                    <p className="text-sm font-medium text-emerald-600">{status}</p>
-                                ) : null}
-                            </CardContent>
-                            <CardFooter>
-                                <Button type="submit" disabled={sending || identifier.length < 3} className="w-full">
-                                    {sending ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                    Send code
-                                </Button>
-                            </CardFooter>
-                        </form>
-                    ) : (
-                        <form onSubmit={verifyOtp}>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="code">6-digit code</Label>
-                                    <InputOTP
-                                        id="code"
-                                        maxLength={6}
-                                        value={code}
-                                        onChange={setCode}
-                                        autoFocus
-                                    >
-                                        <InputOTPGroup className="w-full justify-between gap-2">
-                                            <InputOTPSlot index={0} className="h-12 w-12 text-lg" />
-                                            <InputOTPSlot index={1} className="h-12 w-12 text-lg" />
-                                            <InputOTPSlot index={2} className="h-12 w-12 text-lg" />
-                                            <InputOTPSlot index={3} className="h-12 w-12 text-lg" />
-                                            <InputOTPSlot index={4} className="h-12 w-12 text-lg" />
-                                            <InputOTPSlot index={5} className="h-12 w-12 text-lg" />
-                                        </InputOTPGroup>
-                                    </InputOTP>
-                                    <input type="hidden" name="code" value={code} />
-                                    <InputError message={error} />
-                                </div>
+                {step === 'identifier' ? (
+                    <form onSubmit={requestOtp} className="flex flex-col gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="identifier">Email or phone</Label>
+                            <Input
+                                id="identifier"
+                                autoFocus
+                                autoComplete="username"
+                                placeholder="you@example.com or +15551234567"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
+                                required
+                            />
+                            <InputError message={error} />
+                        </div>
+                        
+                        {status && (
+                            <p className="text-sm font-medium text-emerald-600">{status}</p>
+                        )}
+                        
+                        <Button type="submit" disabled={sending || identifier.length < 3} className="w-full mt-2">
+                            {sending ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            Send code
+                        </Button>
 
-                                <div className="flex items-center justify-between text-sm">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setStep('identifier');
-                                            setCode('');
-                                            setError(null);
-                                        }}
-                                        className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                    >
-                                        Use a different email/phone
-                                    </button>
+                        <p className="text-muted-foreground text-center text-xs mt-4">
+                            No account yet? We will create one automatically.
+                        </p>
+                    </form>
+                ) : (
+                    <form onSubmit={verifyOtp} className="flex flex-col gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="code" className="sr-only">6-digit code</Label>
+                            <InputOTP
+                                id="code"
+                                maxLength={6}
+                                value={code}
+                                onChange={setCode}
+                                autoFocus
+                            >
+                                <InputOTPGroup className="w-full justify-between gap-1 sm:gap-2">
+                                    <InputOTPSlot index={0} className="h-10 w-10 sm:h-12 sm:w-12 text-lg" />
+                                    <InputOTPSlot index={1} className="h-10 w-10 sm:h-12 sm:w-12 text-lg" />
+                                    <InputOTPSlot index={2} className="h-10 w-10 sm:h-12 sm:w-12 text-lg" />
+                                    <InputOTPSlot index={3} className="h-10 w-10 sm:h-12 sm:w-12 text-lg" />
+                                    <InputOTPSlot index={4} className="h-10 w-10 sm:h-12 sm:w-12 text-lg" />
+                                    <InputOTPSlot index={5} className="h-10 w-10 sm:h-12 sm:w-12 text-lg" />
+                                </InputOTPGroup>
+                            </InputOTP>
+                            <input type="hidden" name="code" value={code} />
+                            <InputError message={error} />
+                        </div>
 
-                                    <button
-                                        type="button"
-                                        onClick={resend}
-                                        disabled={cooldown > 0}
-                                        className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
-                                    >
-                                        {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
-                                    </button>
-                                </div>
-                            </CardContent>
-                            <CardFooter>
-                                <Button
-                                    type="submit"
-                                    disabled={verifying || code.length < 6}
-                                    className="w-full"
-                                >
-                                    {verifying ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                    Verify and continue
-                                </Button>
-                            </CardFooter>
-                        </form>
-                    )}
-                </Card>
+                        <Button
+                            type="submit"
+                            disabled={verifying || code.length < 6}
+                            className="w-full mt-2"
+                        >
+                            {verifying ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            Verify and continue
+                        </Button>
+
+                        <div className="flex flex-col items-center justify-center gap-2 text-sm mt-4">
+                            <button
+                                type="button"
+                                onClick={resend}
+                                disabled={cooldown > 0}
+                                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                {cooldown > 0 ? `Resend code in ${cooldown}s` : 'Resend code'}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setStep('identifier');
+                                    setCode('');
+                                    setError(null);
+                                }}
+                                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                            >
+                                Use a different email or phone
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </div>
         </>
     );
 }
