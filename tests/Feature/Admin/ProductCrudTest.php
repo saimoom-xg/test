@@ -7,6 +7,8 @@ use App\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
+    // $this->user->assignRole('admin');
+    $this->user->syncRoles(['admin']);
 });
 
 test('admin dashboard requires authentication', function () {

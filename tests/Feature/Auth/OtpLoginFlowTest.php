@@ -35,7 +35,7 @@ test('existing user can login with email OTP', function () {
     $this->post('/login/otp/request', [
         'identifier' => 'existing@example.com',
         'channel' => 'email',
-    ])->assertOk();
+    ])->assertRedirect();
 
     $code = otpCodeFor('existing@example.com', 'email');
 
@@ -43,7 +43,7 @@ test('existing user can login with email OTP', function () {
         'identifier' => 'existing@example.com',
         'channel' => 'email',
         'code' => $code,
-    ])->assertOk();
+    ])->assertRedirect();
 });
 
 test('new user is auto-created when verifying email OTP', function () {

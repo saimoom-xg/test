@@ -14,7 +14,9 @@ class CustomerController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Customer::query()->withCount('orders');
+        $query = Customer::query()
+            ->with(['user:id,email,phone', 'user.roles:id,name,guard_name'])
+            ->withCount('orders');
 
         if ($search = $request->string('search')->toString()) {
             $query->where(function ($q) use ($search): void {
@@ -25,11 +27,21 @@ class CustomerController extends Controller
             });
         }
 
+        $type = $request->string('type')->toString();
+
+        if ($type === 'all') {
+            $query->whereHas('user.roles', function ($q): void {
+                $q->where('name', '!=', 'admin');
+            });
+        } else {
+            $query->where('orders_count', '>', 0);
+        }
+
         $customers = $query->latest()->paginate(15)->withQueryString();
 
         return Inertia::render('admin/customers/index', [
             'customers' => $customers,
-            'filters' => $request->only(['search']),
+            'filters' => $request->only(['search', 'type']),
         ]);
     }
 

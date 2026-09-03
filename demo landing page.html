@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shophub - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#fdfaf2',
+                            yellow: '#ffc824',
+                            dark: '#3b3572',
+                            gray: '#888888'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .rotated-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(253, 250, 242, 0.9), rgba(253, 250, 242, 0.7));
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03), inset 0 0 0 1px rgba(255,255,255,0.5);
+        }
+        .dot-pattern {
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-[#fdf3e1] text-gray-800 font-sans min-h-screen overflow-x-hidden relative selection:bg-brand-yellow selection:text-black">
+
+    <!-- Fixed Side Elements -->
+    <div class="fixed left-4 lg:left-8 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-6 z-30">
+        <span class="text-xs font-semibold tracking-widest text-gray-800 rotated-text uppercase">Scroll to down</span>
+        <div class="h-24 w-[2px] bg-gray-800"></div>
+    </div>
+    <div class="fixed right-4 lg:right-8 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-6 z-30">
+        <span class="text-xs font-semibold tracking-widest text-gray-800 rotated-text uppercase">Follow - Fb. / In. / Tw.</span>
+    </div>
+    <div class="fixed right-6 bottom-6 z-30 w-12 h-12 bg-[#ffedcc] rounded-full shadow flex items-center justify-center cursor-pointer hover:bg-brand-yellow transition-colors border border-white">
+        <div class="w-3 h-3 bg-black rounded-full"></div>
+    </div>
+
+    <!-- Header Yellow Gradient Background -->
+    <div class="absolute top-0 left-0 right-0 h-[450px] bg-gradient-to-r from-[#ffc824] to-[#ffaf00] rounded-b-[4rem] z-0 overflow-hidden shadow-inner">
+        <!-- Concentric circles -->
+        <div class="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full border-[1px] border-white/20"></div>
+        <div class="absolute top-[0%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full border-[1px] border-white/20"></div>
+        <div class="absolute top-[15%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full border-[1px] border-white/20 bg-white/5 blur-2xl"></div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 lg:px-16 pt-8 pb-20">
+        
+        <!-- Navbar -->
+        <nav class="flex justify-between items-center mb-10">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer">
+                <div class="grid grid-cols-2 gap-[3px]">
+                    <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                    <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                    <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                    <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                </div>
+                <span class="text-2xl font-bold tracking-tight text-black">shophub</span>
+            </div>
+
+            <!-- Links -->
+            <div class="hidden md:flex items-center gap-10 font-bold text-sm">
+                <a href="#" class="text-brand-yellow bg-black/5 px-4 py-1 rounded-full">Home</a>
+                <a href="#" class="text-black hover:text-white transition-colors">Shop</a>
+                <a href="#" class="text-black hover:text-white transition-colors">Blog</a>
+                <a href="#" class="text-black hover:text-white transition-colors">Contact</a>
+            </div>
+
+            <!-- Cart & Price -->
+            <div class="flex items-center gap-6">
+                <span class="font-bold text-lg hidden sm:block">$239:00</span>
+                <div class="relative w-12 h-12 bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm cursor-pointer hover:bg-white/60 transition-colors border border-white/50">
+                    <i class="fa-solid fa-shopping-bag text-gray-900 text-lg"></i>
+                    <span class="absolute 0 top-0 right-0 translate-x-1/4 -translate-y-1/4 w-6 h-6 bg-brand-yellow text-black text-xs font-bold rounded-full flex items-center justify-center shadow-sm border border-brand-yellow">3</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Breadcrumb & Title -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+            <div class="flex flex-col gap-2">
+                <div class="text-sm font-bold text-black/60">Home <span class="mx-1">/</span> <span class="text-black">Product details</span></div>
+                <h1 class="text-3xl lg:text-4xl font-bold text-black mt-2">Product Details</h1>
+            </div>
+            <div class="flex items-center gap-5 text-sm font-bold text-black cursor-pointer hover:opacity-80 transition-opacity">
+                <span>Next Product</span>
+                <i class="fa-solid fa-arrow-left"></i>
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+        </div>
+
+        <!-- Main Product Card -->
+        <div class="glass-card rounded-[2rem] p-6 lg:p-10 flex flex-col lg:flex-row items-center justify-between gap-12 relative overflow-hidden mb-20 shadow-2xl">
+            
+            <!-- Left Section (Text & Thumbs) -->
+            <div class="w-full lg:w-[30%] z-10 flex flex-col">
+                <h2 class="text-2xl lg:text-2xl font-bold text-brand-dark leading-tight mb-5">Nike Air Max 270<br>to Chuck Taylors</h2>
+                <p class="text-brand-gray text-sm font-medium leading-relaxed mb-12 max-w-[280px]">Nike's Air Force 1s were among the most popular sneakers this year.</p>
+                
+                <div class="flex gap-4">
+                    <!-- Thumb 1 -->
+                    <div class="w-16 h-16 bg-white rounded-[1rem] shadow-sm flex items-center justify-center cursor-pointer border-2 border-transparent hover:border-brand-yellow transition-colors relative overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop" class="w-12 h-12 object-cover rounded mix-blend-multiply group-hover:scale-110 transition-transform" alt="thumb">
+                    </div>
+                    <!-- Thumb 2 (Active) -->
+                    <div class="w-16 h-16 bg-brand-yellow rounded-[1rem] shadow-md flex items-center justify-center cursor-pointer border-2 border-brand-yellow relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop" class="w-12 h-12 object-cover rounded mix-blend-multiply scale-110" alt="thumb">
+                    </div>
+                    <!-- Thumb 3 -->
+                    <div class="w-16 h-16 bg-white rounded-[1rem] shadow-sm flex items-center justify-center cursor-pointer border-2 border-transparent hover:border-brand-yellow transition-colors relative overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop" class="w-12 h-12 object-cover rounded mix-blend-multiply group-hover:scale-110 transition-transform" alt="thumb">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center Section (Main Image) -->
+            <div class="w-full lg:w-[40%] flex flex-col items-center justify-center relative z-10 min-h-[400px]">
+                <!-- decorative circles -->
+                <div class="absolute w-[320px] h-[320px] lg:w-[450px] lg:h-[450px] border border-orange-200/60 rounded-full z-0"></div>
+                <div class="absolute w-[220px] h-[220px] lg:w-[320px] lg:h-[320px] border border-orange-200/80 rounded-full z-0 bg-gradient-to-tr from-white/30 to-transparent"></div>
+                
+                <!-- abstract lines -->
+                <svg class="absolute w-[500px] h-[500px] text-gray-500/30 z-0 pointer-events-none -rotate-12" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="none" stroke="currentColor" stroke-width="0.3" d="M10,100 Q80,10 150,100 T290,100" />
+                    <path fill="none" stroke="currentColor" stroke-width="0.3" d="M30,160 Q120,40 180,160" />
+                </svg>
+
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop" alt="Nike Shoe" class="relative z-10 w-full max-w-md drop-shadow-2xl scale-100 lg:scale-[1.1] -rotate-[15deg] transform hover:scale-[1.4] transition-transform duration-700 mix-blend-multiply">
+                
+                <div class="mt-14 text-[2rem] font-bold text-brand-dark relative z-10 bg-white/70 px-8 py-2 rounded-full backdrop-blur-md shadow-sm">$290.00</div>
+            </div>
+
+            <!-- Right Section (Options) -->
+            <div class="w-full lg:w-[30%] z-10 flex flex-col lg:pl-16">
+                <!-- Reviews -->
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="font-bold text-sm text-black">Review:</span>
+                    <div class="text-brand-yellow text-[13px] flex gap-1">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <span class="text-sm font-medium text-brand-gray">4.5 (60)</span>
+                </div>
+
+                <!-- Color -->
+                <div class="flex items-center gap-5 mb-8">
+                    <span class="font-bold text-sm text-black">Color:</span>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#3ae0f5] cursor-pointer shadow-md hover:scale-110 transition-transform"></div>
+                        <div class="w-10 h-10 rounded-full bg-[#ff7b30] cursor-pointer shadow-md border-[3px] border-[#fdfaf2] ring-2 ring-[#ff7b30] hover:scale-110 transition-transform -ml-1"></div>
+                        <div class="w-8 h-8 rounded-full bg-[#ffc824] cursor-pointer shadow-md hover:scale-110 transition-transform"></div>
+                        <div class="w-8 h-8 rounded-full bg-[#bfae9c] cursor-pointer shadow-md hover:scale-110 transition-transform"></div>
+                    </div>
+                </div>
+
+                <!-- Size -->
+                <div class="flex items-start gap-6 mb-10">
+                    <span class="font-bold text-sm text-black mt-3">Size:</span>
+                    <div class="grid grid-cols-3 gap-3 w-full max-w-[210px]">
+                        <div class="w-full h-11 bg-white/80 rounded-[10px] flex items-center justify-center font-bold text-[15px] shadow-sm cursor-pointer hover:bg-white transition-colors text-brand-gray hover:text-black">37</div>
+                        <div class="w-full h-11 bg-brand-yellow rounded-[10px] flex items-center justify-center font-bold text-[15px] shadow-md cursor-pointer text-black">38</div>
+                        <div class="w-full h-11 bg-white/80 rounded-[10px] flex items-center justify-center font-bold text-[15px] shadow-sm cursor-pointer hover:bg-white transition-colors text-brand-gray hover:text-black">39</div>
+                        <div class="w-full h-11 bg-white/80 rounded-[10px] flex items-center justify-center font-bold text-[15px] shadow-sm cursor-pointer hover:bg-white transition-colors text-brand-gray hover:text-black">40</div>
+                        <div class="w-full h-11 bg-white/80 rounded-[10px] flex items-center justify-center font-bold text-[15px] shadow-sm cursor-pointer hover:bg-white transition-colors text-brand-gray hover:text-black">41</div>
+                        <div class="w-full h-11 bg-white/80 rounded-[10px] flex items-center justify-center font-bold text-[15px] shadow-sm cursor-pointer hover:bg-white transition-colors text-brand-gray hover:text-black">42</div>
+                    </div>
+                </div>
+
+                <!-- Add to Cart -->
+                <button class="bg-black text-white px-10 py-[18px] rounded-[20px] font-bold text-[15px] hover:bg-gray-800 transition-all shadow-xl w-max hover:-translate-y-1">
+                    Add to cart
+                </button>
+            </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="mb-20">
+            <div class="flex justify-between items-end mb-10">
+                <h3 class="text-2xl font-bold text-black">Shop by Category</h3>
+                <a href="#" class="text-sm font-bold text-black hover:text-brand-yellow transition-colors">View All <i class="fa-solid fa-arrow-right text-xs ml-1"></i></a>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Cat 1 -->
+                <div class="glass-card rounded-[2rem] p-8 flex flex-col items-center justify-center text-center group cursor-pointer hover:-translate-y-2 transition-transform border border-white">
+                    <div class="w-24 h-24 rounded-full bg-orange-100 mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&auto=format&fit=crop" class="w-16 h-16 object-cover mix-blend-multiply -rotate-12" alt="Sneakers">
+                    </div>
+                    <h4 class="font-bold text-lg text-black mb-1">Sneakers</h4>
+                    <p class="text-sm font-bold text-brand-gray">120 Products</p>
+                </div>
+                <!-- Cat 2 -->
+                <div class="glass-card rounded-[2rem] p-8 flex flex-col items-center justify-center text-center group cursor-pointer hover:-translate-y-2 transition-transform border border-white">
+                    <div class="w-24 h-24 rounded-full bg-blue-100 mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=150&auto=format&fit=crop" class="w-16 h-16 object-cover mix-blend-multiply -rotate-12" alt="Running">
+                    </div>
+                    <h4 class="font-bold text-lg text-black mb-1">Running</h4>
+                    <p class="text-sm font-bold text-brand-gray">85 Products</p>
+                </div>
+                <!-- Cat 3 -->
+                <div class="glass-card rounded-[2rem] p-8 flex flex-col items-center justify-center text-center group cursor-pointer hover:-translate-y-2 transition-transform border border-white">
+                    <div class="w-24 h-24 rounded-full bg-green-100 mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=150&auto=format&fit=crop" class="w-16 h-16 object-cover mix-blend-multiply -rotate-12" alt="Training">
+                    </div>
+                    <h4 class="font-bold text-lg text-black mb-1">Training</h4>
+                    <p class="text-sm font-bold text-brand-gray">64 Products</p>
+                </div>
+                <!-- Cat 4 -->
+                <div class="glass-card rounded-[2rem] p-8 flex flex-col items-center justify-center text-center group cursor-pointer hover:-translate-y-2 transition-transform border border-white">
+                    <div class="w-24 h-24 rounded-full bg-gray-200 mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-socks text-4xl text-gray-500"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-black mb-1">Accessories</h4>
+                    <p class="text-sm font-bold text-brand-gray">42 Products</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLASH SALE -->
+        <div class="mb-20 glass-card rounded-[2rem] p-8 lg:p-10 border border-white relative overflow-hidden shadow-xl flex flex-col lg:flex-row items-center gap-12">
+            <div class="absolute inset-0 opacity-20 dot-pattern pointer-events-none"></div>
+            <!-- Countdown Side -->
+            <div class="w-full lg:w-1/2 relative z-10 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 bg-red-100 text-red-600 px-4 py-2 rounded-full font-bold text-sm mb-6 border border-red-200">
+                    <i class="fa-solid fa-bolt"></i> Flash Sale
+                </div>
+                <h3 class="text-3xl lg:text-4xl font-bold text-black leading-tight mb-6">Up to 50% Off<br>End of Season</h3>
+                <p class="text-brand-gray font-medium mb-10 max-w-sm mx-auto lg:mx-0">Grab the best deals on our top-rated sneakers before they are gone forever.</p>
+                <!-- Timer -->
+                <div class="flex gap-4 justify-center lg:justify-start">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex flex-col items-center justify-center shadow-sm border border-gray-100">
+                        <span class="text-xl font-bold text-black">02</span>
+                        <span class="text-[10px] font-bold text-brand-gray uppercase">Days</span>
+                    </div>
+                    <div class="w-16 h-16 bg-white rounded-2xl flex flex-col items-center justify-center shadow-sm border border-gray-100">
+                        <span class="text-xl font-bold text-black">14</span>
+                        <span class="text-[10px] font-bold text-brand-gray uppercase">Hours</span>
+                    </div>
+                    <div class="w-16 h-16 bg-white rounded-2xl flex flex-col items-center justify-center shadow-sm border border-gray-100">
+                        <span class="text-xl font-bold text-black">45</span>
+                        <span class="text-[10px] font-bold text-brand-gray uppercase">Mins</span>
+                    </div>
+                    <div class="w-16 h-16 bg-white rounded-2xl flex flex-col items-center justify-center shadow-sm border border-gray-100">
+                        <span class="text-xl font-bold text-black">12</span>
+                        <span class="text-[10px] font-bold text-brand-gray uppercase">Secs</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Side -->
+            <div class="w-full lg:w-1/2 relative z-10 flex justify-center">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-brand-yellow rounded-full blur-3xl opacity-30"></div>
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop" alt="Sale Shoe" class="relative z-10 w-80 drop-shadow-2xl -rotate-[15deg] hover:scale-110 transition-transform duration-500 mix-blend-multiply">
+                    <!-- Price Tag -->
+                    <div class="absolute top-1/2 -right-4 bg-black text-white px-6 py-3 rounded-2xl shadow-xl rotate-12 z-20">
+                        <p class="text-xs font-bold text-gray-400 line-through">$290.00</p>
+                        <p class="text-xl font-bold">$145.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURED PRODUCTS -->
+        <div class="mb-20">
+            <div class="flex justify-between items-end mb-10">
+                <h3 class="text-2xl font-bold text-black">Featured Products</h3>
+                <a href="#" class="text-sm font-bold text-black hover:text-brand-yellow transition-colors">All Features <i class="fa-solid fa-arrow-right text-xs ml-1"></i></a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-[#fcfaf5] rounded-[2rem] p-6 shadow-sm border border-white relative overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300">
+                    <div class="absolute inset-0 opacity-40 dot-pattern pointer-events-none"></div>
+                    <div class="flex justify-between items-start relative z-10 mb-8">
+                        <button class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-colors text-black/60"><i class="fa-solid fa-heart text-sm"></i></button>
+                        <button class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-colors text-black/60"><i class="fa-solid fa-shopping-bag text-sm"></i></button>
+                    </div>
+                    <div class="relative h-56 mb-8 flex items-center justify-center">
+                        <div class="absolute w-40 h-40 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-[2rem] rotate-[15deg] group-hover:rotate-45 transition-transform duration-700 opacity-90"></div>
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop" alt="Shoe" class="relative z-10 w-64 drop-shadow-2xl -rotate-[15deg] group-hover:scale-[1.15] group-hover:-rotate-[5deg] transition-all duration-700 mix-blend-multiply filter grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="relative z-10 text-center pb-2">
+                        <h4 class="font-bold text-xl mb-2 text-black">Nike Classic Retro</h4>
+                        <p class="text-brand-dark font-bold text-lg">$140.00</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-[#fcfaf5] rounded-[2rem] p-6 shadow-sm border border-white relative overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300">
+                    <div class="absolute inset-0 opacity-40 dot-pattern pointer-events-none"></div>
+                    <div class="absolute top-6 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-3 py-1 rounded-full z-20">HOT</div>
+                    <div class="flex justify-between items-start relative z-10 mb-8">
+                        <button class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-colors text-black/60"><i class="fa-solid fa-heart text-sm"></i></button>
+                        <button class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-colors text-black/60"><i class="fa-solid fa-shopping-bag text-sm"></i></button>
+                    </div>
+                    <div class="relative h-56 mb-8 flex items-center justify-center">
+                        <div class="absolute w-40 h-40 bg-gradient-to-br from-rose-400 to-rose-500 rounded-[2rem] rotate-[15deg] group-hover:rotate-45 transition-transform duration-700 opacity-90"></div>
+                        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=400&auto=format&fit=crop" alt="Shoe" class="relative z-10 w-64 drop-shadow-2xl -rotate-[15deg] group-hover:scale-[1.15] group-hover:-rotate-[5deg] transition-all duration-700 mix-blend-multiply">
+                    </div>
+                    <div class="relative z-10 text-center pb-2">
+                        <h4 class="font-bold text-xl mb-2 text-black">Nike Flyknit Racer</h4>
+                        <p class="text-brand-dark font-bold text-lg">$195.00</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-[#fcfaf5] rounded-[2rem] p-6 shadow-sm border border-white relative overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300 hidden lg:block">
+                    <div class="absolute inset-0 opacity-40 dot-pattern pointer-events-none"></div>
+                    <div class="flex justify-between items-start relative z-10 mb-8">
+                        <button class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-colors text-black/60"><i class="fa-solid fa-heart text-sm"></i></button>
+                        <button class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-colors text-black/60"><i class="fa-solid fa-shopping-bag text-sm"></i></button>
+                    </div>
+                    <div class="relative h-56 mb-8 flex items-center justify-center">
+                        <div class="absolute w-40 h-40 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-[2rem] rotate-[15deg] group-hover:rotate-45 transition-transform duration-700 opacity-90"></div>
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&auto=format&fit=crop" alt="Shoe" class="relative z-10 w-64 drop-shadow-2xl -rotate-[15deg] group-hover:scale-[1.15] group-hover:-rotate-[5deg] transition-all duration-700 mix-blend-multiply">
+                    </div>
+                    <div class="relative z-10 text-center pb-2">
+                        <h4 class="font-bold text-xl mb-2 text-black">Nike Urban Walk</h4>
+                        <p class="text-brand-dark font-bold text-lg">$110.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROMOTIONAL BANNER -->
+        <div class="mb-20 relative rounded-[2rem] overflow-hidden min-h-[400px] flex items-center bg-brand-dark group shadow-2xl">
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=1200&auto=format&fit=crop" class="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000" alt="Promotional Banner">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#1e1b4b] via-[#1e1b4b]/90 to-transparent"></div>
+            </div>
+            <!-- Content -->
+            <div class="relative z-10 px-10 lg:px-20 w-full lg:w-2/3">
+                <span class="inline-block text-brand-yellow font-bold uppercase tracking-widest text-sm mb-4">Limited Time Offer</span>
+                <h2 class="text-3xl lg:text-4xl font-bold text-white leading-tight mb-6">Elevate Your Game.<br>Exclusive Streetwear Drop.</h2>
+                <p class="text-gray-300 font-medium mb-10 max-w-md">Discover the intersection of performance and culture. The new collection is available for early access.</p>
+                <button class="bg-brand-yellow text-black px-8 py-[16px] rounded-[18px] font-bold text-[15px] hover:bg-white transition-all shadow-lg hover:-translate-y-1">
+                    Explore Collection
+                </button>
+            </div>
+        </div>
+
+        <!-- NEW ARRIVALS -->
+        <div class="mb-20">
+            <div class="flex justify-between items-end mb-10">
+                <h3 class="text-2xl font-bold text-black">New Arrivals</h3>
+                <div class="flex gap-3">
+                    <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-brand-yellow transition-colors shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-brand-yellow transition-colors shadow-sm"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <div class="flex overflow-x-auto gap-8 pb-8 hide-scroll">
+                <!-- Short Card 1 -->
+                <div class="min-w-[280px] bg-white/50 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:-translate-y-2 transition-transform cursor-pointer">
+                    <div class="bg-gray-100 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl" alt="new">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-black">Air Max Plus</h4>
+                            <p class="text-sm font-bold text-brand-gray">$165.00</p>
+                        </div>
+                        <button class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
+                    </div>
+                </div>
+                <!-- Short Card 2 -->
+                <div class="min-w-[280px] bg-white/50 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:-translate-y-2 transition-transform cursor-pointer">
+                    <div class="bg-orange-50 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl" alt="new">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-black">Air Force 1</h4>
+                            <p class="text-sm font-bold text-brand-gray">$110.00</p>
+                        </div>
+                        <button class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
+                    </div>
+                </div>
+                <!-- Short Card 3 -->
+                <div class="min-w-[280px] bg-white/50 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:-translate-y-2 transition-transform cursor-pointer">
+                    <div class="bg-blue-50 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl" alt="new">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-black">Dunk Low</h4>
+                            <p class="text-sm font-bold text-brand-gray">$100.00</p>
+                        </div>
+                        <button class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
+                    </div>
+                </div>
+                <!-- Short Card 4 -->
+                <div class="min-w-[280px] bg-white/50 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:-translate-y-2 transition-transform cursor-pointer">
+                    <div class="bg-green-50 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl filter hue-rotate-90" alt="new">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-black">Blazer Mid</h4>
+                            <p class="text-sm font-bold text-brand-gray">$105.00</p>
+                        </div>
+                        <button class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BEST SELLERS -->
+        <div class="mb-20">
+            <div class="flex justify-between items-end mb-10">
+                <h3 class="text-2xl font-bold text-black">Best Sellers</h3>
+                <a href="#" class="text-sm font-bold text-black hover:text-brand-yellow transition-colors">See All <i class="fa-solid fa-arrow-right text-xs ml-1"></i></a>
+            </div>
+            <!-- Minimal horizontal cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white/60 backdrop-blur-md rounded-[2rem] p-6 shadow-sm border border-white flex items-center gap-6 hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="w-32 h-32 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=200&auto=format&fit=crop" class="w-24 mix-blend-multiply" alt="best">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex text-brand-yellow text-xs mb-2">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-black mb-1">Nike Joyride Run</h4>
+                        <p class="text-brand-dark font-bold mb-3">$160.00</p>
+                        <button class="text-sm font-bold border-b-2 border-black pb-1 hover:text-brand-yellow hover:border-brand-yellow transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="bg-white/60 backdrop-blur-md rounded-[2rem] p-6 shadow-sm border border-white flex items-center gap-6 hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="w-32 h-32 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=200&auto=format&fit=crop" class="w-24 mix-blend-multiply" alt="best">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex text-brand-yellow text-xs mb-2">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-black mb-1">Nike Air Zoom</h4>
+                        <p class="text-brand-dark font-bold mb-3">$120.00</p>
+                        <button class="text-sm font-bold border-b-2 border-black pb-1 hover:text-brand-yellow hover:border-brand-yellow transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHOP BY COLLECTION -->
+        <div class="mb-20">
+            <h3 class="text-2xl font-bold text-black mb-10">Shop by Collection</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Collection 1 -->
+                <div class="relative h-[300px] rounded-[2rem] overflow-hidden group cursor-pointer shadow-xl border border-white">
+                    <img src="https://images.unsplash.com/photo-1552346154-21d32810baa3?w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Summer Collection">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-10 left-10 z-10">
+                        <span class="text-brand-yellow font-bold uppercase tracking-widest text-xs mb-2 block">New Season</span>
+                        <h4 class="text-2xl font-bold text-white mb-4">Summer Collection</h4>
+                        <button class="bg-white/20 backdrop-blur text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-white hover:text-black transition-colors border border-white/40">Shop Now</button>
+                    </div>
+                </div>
+                <!-- Collection 2 -->
+                <div class="relative h-[300px] rounded-[2rem] overflow-hidden group cursor-pointer shadow-xl border border-white">
+                    <img src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Urban Run">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-10 left-10 z-10">
+                        <span class="text-brand-yellow font-bold uppercase tracking-widest text-xs mb-2 block">Performance</span>
+                        <h4 class="text-2xl font-bold text-white mb-4">Urban Run Series</h4>
+                        <button class="bg-white/20 backdrop-blur text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-white hover:text-black transition-colors border border-white/40">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORY PRODUCTS (Tabbed Grid) -->
+        <div class="mb-20">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                <h3 class="text-2xl font-bold text-black">Top Picks For You</h3>
+                <!-- Tabs -->
+                <div class="flex gap-4 bg-white/50 backdrop-blur p-2 rounded-full border border-white/50 shadow-sm">
+                    <button class="bg-black text-white px-6 py-2 rounded-full font-bold text-sm shadow-md">All</button>
+                    <button class="text-brand-gray px-6 py-2 rounded-full font-bold text-sm hover:text-black transition-colors">Lifestyle</button>
+                    <button class="text-brand-gray px-6 py-2 rounded-full font-bold text-sm hover:text-black transition-colors">Running</button>
+                    <button class="text-brand-gray px-6 py-2 rounded-full font-bold text-sm hover:text-black transition-colors">Basketball</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Short Card 1 -->
+                <div class="bg-white/60 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="bg-gray-100 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl relative z-10 group-hover:scale-110 transition-transform" alt="shoe">
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-black mb-1">Air Max Plus</h4>
+                        <p class="text-sm font-bold text-brand-gray">$165.00</p>
+                    </div>
+                </div>
+                <!-- Short Card 2 -->
+                <div class="bg-white/60 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="bg-orange-50 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl relative z-10 group-hover:scale-110 transition-transform" alt="shoe">
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-black mb-1">Air Force 1</h4>
+                        <p class="text-sm font-bold text-brand-gray">$110.00</p>
+                    </div>
+                </div>
+                <!-- Short Card 3 -->
+                <div class="bg-white/60 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="bg-blue-50 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl relative z-10 group-hover:scale-110 transition-transform" alt="shoe">
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-black mb-1">Dunk Low</h4>
+                        <p class="text-sm font-bold text-brand-gray">$100.00</p>
+                    </div>
+                </div>
+                <!-- Short Card 4 -->
+                <div class="bg-white/60 backdrop-blur-sm rounded-[2rem] p-5 shadow-sm border border-white hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="bg-green-50 rounded-2xl h-48 mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-green-100 to-green-50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&auto=format&fit=crop" class="w-3/4 mix-blend-multiply drop-shadow-xl filter hue-rotate-90 relative z-10 group-hover:scale-110 transition-transform" alt="shoe">
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-black mb-1">Blazer Mid</h4>
+                        <p class="text-sm font-bold text-brand-gray">$105.00</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <button class="bg-white border-2 border-black text-black px-8 py-3 rounded-full font-bold text-sm hover:bg-black hover:text-white transition-colors">Load More Products</button>
+            </div>
+        </div>
+
+        <!-- WHY SHOP WITH US -->
+        <div class="mb-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card rounded-[2rem] p-8 text-center border border-white flex flex-col items-center">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-2xl text-brand-yellow">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-black mb-3">Free Shipping</h4>
+                    <p class="text-brand-gray font-medium text-sm leading-relaxed">Enjoy free and fast delivery on all orders above $100. Delivered right to your doorstep safely.</p>
+                </div>
+                <div class="glass-card rounded-[2rem] p-8 text-center border border-white flex flex-col items-center">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-2xl text-brand-yellow">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-black mb-3">100% Secure Payment</h4>
+                    <p class="text-brand-gray font-medium text-sm leading-relaxed">Your payment information is processed securely. We use the latest encryption protocols.</p>
+                </div>
+                <div class="glass-card rounded-[2rem] p-8 text-center border border-white flex flex-col items-center">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-2xl text-brand-yellow">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-black mb-3">30 Days Return</h4>
+                    <p class="text-brand-gray font-medium text-sm leading-relaxed">Not completely satisfied? Return it within 30 days for a full refund or exchange.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOMER REVIEWS -->
+        <div class="mb-20">
+            <div class="flex justify-between items-end mb-10">
+                <h3 class="text-2xl font-bold text-black">Loved by Customers</h3>
+                <div class="flex gap-2">
+                    <i class="fa-solid fa-star text-brand-yellow"></i>
+                    <i class="fa-solid fa-star text-brand-yellow"></i>
+                    <i class="fa-solid fa-star text-brand-yellow"></i>
+                    <i class="fa-solid fa-star text-brand-yellow"></i>
+                    <i class="fa-solid fa-star text-brand-yellow"></i>
+                    <span class="font-bold text-sm ml-2">4.9/5 (2,400+ Reviews)</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Review 1 -->
+                <div class="bg-white/70 backdrop-blur-md rounded-[2rem] p-8 border border-white shadow-sm hover:-translate-y-1 transition-transform">
+                    <div class="flex text-brand-yellow text-sm mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-black font-medium leading-relaxed mb-6">"Absolutely love my new sneakers! The shipping was incredibly fast, and the quality is exactly as described. Will definitely be shopping here again."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-black text-sm">Sarah Jenkins</h5>
+                            <p class="text-xs text-brand-gray font-bold">Verified Buyer</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div class="bg-white/70 backdrop-blur-md rounded-[2rem] p-8 border border-white shadow-sm hover:-translate-y-1 transition-transform">
+                    <div class="flex text-brand-yellow text-sm mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-black font-medium leading-relaxed mb-6">"The best selection of premium footwear I've found online. The website is easy to use, and customer service was very helpful when I had a sizing question."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-black text-sm">Michael Chen</h5>
+                            <p class="text-xs text-brand-gray font-bold">Verified Buyer</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 3 -->
+                <div class="bg-white/70 backdrop-blur-md rounded-[2rem] p-8 border border-white shadow-sm hover:-translate-y-1 transition-transform hidden lg:block">
+                    <div class="flex text-brand-yellow text-sm mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-black font-medium leading-relaxed mb-6">"The packaging was pristine, and the shoes look amazing. I've been recommending Shophub to all my friends. Great deals on exclusive drops!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-black text-sm">Emily Rodriguez</h5>
+                            <p class="text-xs text-brand-gray font-bold">Verified Buyer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRUST / PAYMENT -->
+        <div class="mb-10 flex flex-col items-center justify-center opacity-70 hover:opacity-100 transition-opacity">
+            <p class="text-xs font-bold text-brand-gray uppercase tracking-widest mb-6 text-center">Guaranteed Safe Checkout</p>
+            <div class="flex gap-6 items-center flex-wrap justify-center text-3xl text-gray-400">
+                <i class="fa-brands fa-cc-visa hover:text-blue-700 transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-cc-mastercard hover:text-orange-500 transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-cc-amex hover:text-blue-500 transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-cc-paypal hover:text-blue-800 transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-cc-apple-pay hover:text-black transition-colors cursor-pointer"></i>
+            </div>
+        </div>
+
+    </div> <!-- End Main Content Wrapper -->
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-white/40 backdrop-blur-md border-t border-white/60 pt-20 pb-10 mt-10 shadow-[0_-10px_40px_rgba(0,0,0,0.02)]">
+        <div class="max-w-7xl mx-auto px-4 lg:px-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Brand Info -->
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="grid grid-cols-2 gap-[3px]">
+                            <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                            <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                            <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                            <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                        </div>
+                        <span class="text-2xl font-bold tracking-tight text-black">shophub</span>
+                    </div>
+                    <p class="text-[15px] font-medium text-brand-gray leading-relaxed pr-4">Your one-stop destination for premium sneakers and athletic wear. Step into comfort and style with our curated collections.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-xl text-black mb-8">Quick Links</h4>
+                    <ul class="space-y-4 text-[15px] font-medium text-brand-gray">
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Home</a></li>
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Shop</a></li>
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> About Us</a></li>
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Service -->
+                <div>
+                    <h4 class="font-bold text-xl text-black mb-8">Customer Service</h4>
+                    <ul class="space-y-4 text-[15px] font-medium text-brand-gray">
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Help Center</a></li>
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Returns & Refunds</a></li>
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Shipping Info</a></li>
+                        <li><a href="#" class="hover:text-black transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Track Order</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-bold text-xl text-black mb-8">Newsletter</h4>
+                    <p class="text-[15px] font-medium text-brand-gray mb-6">Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+                    <div class="relative">
+                        <input type="email" placeholder="Enter your email" class="w-full bg-white border border-white/50 rounded-full pl-6 pr-32 py-[14px] text-[15px] outline-none focus:border-brand-yellow shadow-sm font-medium transition-colors">
+                        <button class="absolute right-1.5 top-1.5 bottom-1.5 bg-black text-white px-6 rounded-full text-[15px] font-bold hover:bg-brand-yellow hover:text-black transition-colors shadow-md">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-300/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[15px] font-medium text-brand-gray">&copy; 2026 Shophub. All rights reserved.</p>
+                <div class="flex gap-8 text-[15px] font-medium text-brand-gray">
+                    <a href="#" class="hover:text-black transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-black transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

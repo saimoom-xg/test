@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 /*
@@ -48,3 +49,7 @@ function something()
 {
     // ..
 }
+
+uses()->beforeEach(function (): void {
+    Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+})->in('Feature/Admin', 'Feature/Auth', 'Feature/DashboardTest.php');

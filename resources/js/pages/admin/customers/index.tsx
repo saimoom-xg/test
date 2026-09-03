@@ -1,10 +1,23 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { Search, Trash2 } from 'lucide-react';
+import { Head, Link } from '@inertiajs/react';
+import { ArrowLeft, ArrowRight, Search, ShoppingBag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+
+type Role = {
+    id: number;
+    name: string;
+    guard_name: string;
+};
 
 type Customer = {
     id: number;
@@ -15,20 +28,41 @@ type Customer = {
     is_guest: boolean;
     orders_count: number;
     created_at: string;
+    user: {
+        id: number;
+        email: string | null;
+        phone: string | null;
+        roles: Role[];
+    } | null;
 };
 
 type Paginated<T> = { data: T[] };
 
 type Props = {
     customers: Paginated<Customer>;
-    filters: { search?: string };
+    filters: { search?: string; type?: string };
 };
 
 export default function CustomersIndex({ customers, filters }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
+    const [type, setType] = useState(filters.type ?? 'customers');
 
-    const apply = (): void => {
-        router.get('/admin/customers', { search }, { preserveState: true });
+    const applyFilters = (): void => {
+        router.get('/admin/customers', { search, type }, { preserveState: true });
+    };
+
+    const handleTypeChange = (value: string): void => {
+        setType(value === 'all' ? 'all' : 'customers');
+        router.get('/admin/customers', { search, type: value === 'all' ? 'all' : 'customers' }, { preserveState: true });
+    };
+
+    const renderRoleBadge = (role: Role): JSX.Element => {
+        const variant = role.name === 'admin' ? 'default' : 'secondary';
+        return (
+            <Badge key={role.id} variant={variant} className="capitalize">
+                {role.name}
+            </Badge>
+        );
     };
 
     return (
@@ -42,18 +76,31 @@ export default function CustomersIndex({ customers, filters }: Props) {
 
                 <Card>
                     <CardHeader>
-                        <div className="flex items-center gap-2">
-                            <div className="relative flex-1">
-                                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-                                <Input
-                                    placeholder="Search customers..."
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && apply()}
-                                    className="pl-9"
-                                />
+                        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+                            <div className="w-full md:w-56">
+                                <Select value={type} onValueChange={handleTypeChange}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Filter users" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="customers">Customers only</SelectItem>
+                                        <SelectItem value="all">All users</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
-                            <Button onClick={apply}>Search</Button>
+                            <div className="flex w-full items-center gap-2 md:w-auto">
+                                <div className="relative w-full md:w-64">
+                                    <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                                    <Input
+                                        placeholder="Search customers..."
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+                                        className="pl-9"
+                                    />
+                                </div>
+                                <Button onClick={applyFilters}>Search</Button>
+                            </div>
                         </div>
                     </CardHeader>
                     <CardContent className="p-0">
@@ -64,6 +111,7 @@ export default function CustomersIndex({ customers, filters }: Props) {
                                     <th className="px-6 py-3 font-medium">Email</th>
                                     <th className="px-6 py-3 font-medium">Phone</th>
                                     <th className="px-6 py-3 font-medium">Type</th>
+                                    <th className="px-6 py-3 font-medium">Roles</th>
                                     <th className="px-6 py-3 text-right font-medium">Orders</th>
                                     <th className="px-6 py-3 text-right font-medium">Actions</th>
                                 </tr>
@@ -85,6 +133,15 @@ export default function CustomersIndex({ customers, filters }: Props) {
                                                 <Badge variant="secondary">Registered</Badge>
                                             )}
                                         </td>
+                                        <td className="px-6 py-3">
+                                            <div className="flex flex-wrap gap-1">
+                                                {c.user?.roles?.length
+                                                    ? c.user.roles.map(renderRoleBadge)
+                                                    : (
+                                                          <span className="text-muted-foreground text-xs">No roles</span>
+                                                      )}
+                                            </div>
+                                        </td>
                                         <td className="px-6 py-3 text-right">{c.orders_count}</td>
                                         <td className="px-6 py-3 text-right">
                                             <Button
@@ -103,7 +160,7 @@ export default function CustomersIndex({ customers, filters }: Props) {
                                 ))}
                                 {customers.data.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="text-muted-foreground px-6 py-12 text-center text-sm">
+                                        <td colSpan={7} className="text-muted-foreground px-6 py-12 text-center text-sm">
                                             No customers found.
                                         </td>
                                     </tr>

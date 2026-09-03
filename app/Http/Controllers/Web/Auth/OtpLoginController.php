@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class OtpLoginController extends Controller
 {
@@ -95,6 +96,8 @@ class OtpLoginController extends Controller
                 'email_verified_at' => $channel === 'email' ? now() : null,
             ]);
 
+            $this->ensureUserRole($user);
+
             Customer::query()->firstOrCreate(
                 ['user_id' => $user->id],
                 [
@@ -107,11 +110,25 @@ class OtpLoginController extends Controller
             );
 
             Log::info('New user auto-registered via OTP', ['user_id' => $user->id, 'channel' => $channel]);
+        } elseif ($user->roles->isEmpty()) {
+            $this->ensureUserRole($user);
         }
 
         Auth::login($user, true);
         $request->session()->regenerate();
 
         return redirect()->intended('/dashboard');
+    }
+
+    private function ensureUserRole(User $user): void
+    {
+        Role::firstOrCreate(
+            ['name' => 'user', 'guard_name' => 'web'],
+        );
+
+        if (! $user->hasRole('user')) {
+            // $user->assignRole('user');
+            $user->syncRoles(['user']);
+        }
     }
 }

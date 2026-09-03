@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\FlashSale;
 use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
 
 class FlashSaleController extends Controller
 {
@@ -46,7 +46,7 @@ class FlashSaleController extends Controller
             'is_active' => $validated['is_active'] ?? true,
         ]);
 
-        if (!empty($validated['products'])) {
+        if (! empty($validated['products'])) {
             foreach ($validated['products'] as $productData) {
                 $sale->products()->create($productData);
             }
@@ -87,7 +87,7 @@ class FlashSaleController extends Controller
 
         // Sync products
         $flashSale->products()->delete();
-        if (!empty($validated['products'])) {
+        if (! empty($validated['products'])) {
             foreach ($validated['products'] as $productData) {
                 $flashSale->products()->create($productData);
             }
@@ -99,6 +99,7 @@ class FlashSaleController extends Controller
     public function destroy(FlashSale $flashSale): RedirectResponse
     {
         $flashSale->delete();
+
         return back()->with('success', 'Flash sale deleted.');
     }
 }

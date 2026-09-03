@@ -41,6 +41,8 @@ class ProductRequest extends FormRequest
             'meta_description' => ['nullable', 'string'],
             'category_ids' => ['nullable', 'array'],
             'category_ids.*' => ['integer', 'exists:categories,id'],
+            'images' => ['nullable', 'array', 'max:10'],
+            'images.*' => ['file', 'image', 'max:2048'],
         ];
     }
 }

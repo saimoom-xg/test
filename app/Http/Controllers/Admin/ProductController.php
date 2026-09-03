@@ -60,12 +60,26 @@ class ProductController extends Controller
     {
         $data = $request->validated();
         $categoryIds = $data['category_ids'] ?? [];
-        unset($data['category_ids']);
+        $images = $data['images'] ?? [];
+        unset($data['category_ids'], $data['images']);
 
         $product = Product::create($data);
 
         if ($categoryIds) {
             $product->categories()->sync($categoryIds);
+        }
+
+        if ($images) {
+            foreach ($images as $index => $image) {
+                $path = $image->store('products', 'public');
+
+                $product->images()->create([
+                    'path' => $path,
+                    'alt' => $product->name,
+                    'is_primary' => $index === 0,
+                    'sort_order' => $index,
+                ]);
+            }
         }
 
         return to_route('admin.products.index')
@@ -83,7 +97,7 @@ class ProductController extends Controller
 
     public function edit(Product $product): Response
     {
-        $product->load('categories');
+        $product->load(['categories', 'images']);
 
         return Inertia::render('admin/products/form', [
             'product' => $product,
@@ -96,10 +110,24 @@ class ProductController extends Controller
     {
         $data = $request->validated();
         $categoryIds = $data['category_ids'] ?? [];
-        unset($data['category_ids']);
+        $images = $data['images'] ?? [];
+        unset($data['category_ids'], $data['images']);
 
         $product->update($data);
         $product->categories()->sync($categoryIds);
+
+        if ($images) {
+            foreach ($images as $index => $image) {
+                $path = $image->store('products', 'public');
+
+                $product->images()->create([
+                    'path' => $path,
+                    'alt' => $product->name,
+                    'is_primary' => $index === 0 && ! $product->images()->where('is_primary', true)->exists(),
+                    'sort_order' => $index,
+                ]);
+            }
+        }
 
         return to_route('admin.products.index')
             ->with('toast', ['type' => 'success', 'message' => 'Product updated.']);

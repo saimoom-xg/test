@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
 
 class CouponController extends Controller
 {
@@ -40,7 +40,7 @@ class CouponController extends Controller
     public function update(Request $request, Coupon $coupon): RedirectResponse
     {
         $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:coupons,code,' . $coupon->id,
+            'code' => 'required|string|max:255|unique:coupons,code,'.$coupon->id,
             'type' => 'required|in:percentage,fixed',
             'value' => 'required|numeric|min:0',
             'min_order_amount' => 'nullable|numeric|min:0',
@@ -59,6 +59,7 @@ class CouponController extends Controller
     public function destroy(Coupon $coupon): RedirectResponse
     {
         $coupon->delete();
+
         return back()->with('success', 'Coupon deleted.');
     }
 }

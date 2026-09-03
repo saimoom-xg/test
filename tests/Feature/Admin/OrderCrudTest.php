@@ -9,6 +9,8 @@ use App\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
+    // $this->user->assignRole('admin');
+    $this->user->syncRoles(['admin']);
 });
 
 test('orders index renders', function () {

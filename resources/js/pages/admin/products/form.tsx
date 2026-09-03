@@ -4,9 +4,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ImagePlus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 type Brand = { id: number; name: string };
 type Category = { id: number; name: string };
+type ProductImage = {
+    id: number;
+    path: string;
+    alt: string | null;
+    is_primary: boolean;
+    sort_order: number;
+};
+
 type Product = {
     id: number;
     name: string;
@@ -30,6 +40,7 @@ type Product = {
     meta_title: string | null;
     meta_description: string | null;
     categories: { id: number }[];
+    images: ProductImage[];
 };
 
 type Props = {
@@ -63,12 +74,30 @@ export default function ProductForm({ product, brands, categories }: Props) {
         meta_title: product.meta_title ?? '',
         meta_description: product.meta_description ?? '',
         category_ids: product.categories?.map((c) => c.id) ?? [],
+        images: [] as File[],
     });
 
     const submit = (e: React.FormEvent): void => {
         e.preventDefault();
         const url = isEdit ? `/admin/products/${product.id}` : '/admin/products';
-        form[isEdit ? 'put' : 'post'](url, { preserveScroll: true });
+        const data = new FormData();
+        
+        Object.entries(form.data).forEach(([key, value]) => {
+            if (key === 'images') {
+                (value as File[]).forEach((file) => data.append('images[]', file));
+            } else if (key === 'category_ids') {
+                (value as number[]).forEach((id) => data.append('category_ids[]', String(id)));
+            } else if (typeof value === 'boolean') {
+                data.append(key, value ? '1' : '0');
+            } else if (value !== null && value !== undefined && value !== '') {
+                data.append(key, String(value));
+            }
+        });
+
+        form[isEdit ? 'put' : 'post'](url, data as any, {
+            preserveScroll: true,
+            forceFormData: true,
+        });
     };
 
     return (
@@ -307,6 +336,47 @@ export default function ProductForm({ product, brands, categories }: Props) {
                                     {isEdit ? 'Update product' : 'Create product'}
                                 </Button>
                             </CardFooter>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Images</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="images">Product images</Label>
+                                    <Input
+                                        id="images"
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={(e) => {
+                                            const files = Array.from(e.target.files ?? []);
+                                            form.setData('images', files);
+                                        }}
+                                    />
+                                    <InputError message={form.errors.images} />
+                                </div>
+
+                                {product.images?.length > 0 && (
+                                    <div className="grid grid-cols-3 gap-3">
+                                        {product.images.map((img) => (
+                                            <div key={img.id} className="relative aspect-square rounded-md border bg-muted">
+                                                <img
+                                                    src={`/storage/${img.path}`}
+                                                    alt={img.alt ?? ''}
+                                                    className="h-full w-full rounded-md object-cover"
+                                                />
+                                                {img.is_primary && (
+                                                    <span className="bg-primary text-primary-foreground absolute top-1 left-1 rounded px-1.5 py-0.5 text-[10px] font-medium uppercase">
+                                                        Primary
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </CardContent>
                         </Card>
 
                         <Card>

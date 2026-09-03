@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProductReview;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
 
 class ReviewController extends Controller
 {
@@ -24,7 +24,7 @@ class ReviewController extends Controller
     public function show(ProductReview $review): Response
     {
         $review->load(['product', 'customer']);
-        
+
         return Inertia::render('admin/reviews/show', [
             'review' => $review,
         ]);
@@ -44,6 +44,7 @@ class ReviewController extends Controller
     public function destroy(ProductReview $review): RedirectResponse
     {
         $review->delete();
+
         return redirect()->route('admin.reviews.index')->with('success', 'Review deleted successfully.');
     }
 }

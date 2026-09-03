@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
 
 class ContactMessageController extends Controller
 {
@@ -21,7 +21,7 @@ class ContactMessageController extends Controller
     public function show(ContactMessage $contact): Response
     {
         $contact->load(['order', 'replies.user']);
-        
+
         if ($contact->status === 'new') {
             $contact->update(['status' => 'read']);
         }
@@ -50,6 +50,7 @@ class ContactMessageController extends Controller
     public function close(ContactMessage $contact): RedirectResponse
     {
         $contact->update(['status' => 'closed']);
+
         return back()->with('success', 'Message marked as closed.');
     }
 }

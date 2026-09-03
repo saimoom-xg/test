@@ -2,19 +2,35 @@
 
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FlashSaleController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ReturnController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ShippingMethodController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\TaxRateController;
+use App\Http\Controllers\Admin\VariantController;
 use App\Http\Controllers\Web\Admin\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/update-role', function () {
+    //     $user = auth()->user();
+    //     if ($user) {
+    //         $user->syncRoles(['admin']);
+    //         return response()->json(['message' => 'Role updated to admin.']);
+    //     }
+    //     return response()->json(['message' => 'User not authenticated.'], 401);
+    // });
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.alt');
     Route::get('search', [SearchController::class, 'global'])->name('search.global');
 
@@ -49,37 +65,37 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
 
-    Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
-    Route::resource('flash-sales', \App\Http\Controllers\Admin\FlashSaleController::class);
+    Route::resource('coupons', CouponController::class);
+    Route::resource('flash-sales', FlashSaleController::class);
 
-    Route::get('returns', [\App\Http\Controllers\Admin\ReturnController::class, 'index'])->name('returns.index');
-    Route::get('returns/{return}', [\App\Http\Controllers\Admin\ReturnController::class, 'show'])->name('returns.show');
-    Route::post('returns/{return}/status', [\App\Http\Controllers\Admin\ReturnController::class, 'updateStatus'])->name('returns.status');
+    Route::get('returns', [ReturnController::class, 'index'])->name('returns.index');
+    Route::get('returns/{return}', [ReturnController::class, 'show'])->name('returns.show');
+    Route::post('returns/{return}/status', [ReturnController::class, 'updateStatus'])->name('returns.status');
 
     Route::prefix('reports')->name('reports.')->group(function (): void {
-        Route::get('sales', [\App\Http\Controllers\Admin\ReportController::class, 'sales'])->name('sales');
-        Route::get('orders', [\App\Http\Controllers\Admin\ReportController::class, 'orders'])->name('orders');
-        Route::get('products', [\App\Http\Controllers\Admin\ReportController::class, 'products'])->name('products');
-        Route::get('customers', [\App\Http\Controllers\Admin\ReportController::class, 'customers'])->name('customers');
-        Route::get('coupons', [\App\Http\Controllers\Admin\ReportController::class, 'coupons'])->name('coupons');
-        Route::get('inventory', [\App\Http\Controllers\Admin\ReportController::class, 'inventory'])->name('inventory');
-        Route::get('payments', [\App\Http\Controllers\Admin\ReportController::class, 'payments'])->name('payments');
-        Route::get('taxes', [\App\Http\Controllers\Admin\ReportController::class, 'taxes'])->name('taxes');
+        Route::get('sales', [ReportController::class, 'sales'])->name('sales');
+        Route::get('orders', [ReportController::class, 'orders'])->name('orders');
+        Route::get('products', [ReportController::class, 'products'])->name('products');
+        Route::get('customers', [ReportController::class, 'customers'])->name('customers');
+        Route::get('coupons', [ReportController::class, 'coupons'])->name('coupons');
+        Route::get('inventory', [ReportController::class, 'inventory'])->name('inventory');
+        Route::get('payments', [ReportController::class, 'payments'])->name('payments');
+        Route::get('taxes', [ReportController::class, 'taxes'])->name('taxes');
     });
 
-    Route::resource('tags', \App\Http\Controllers\Admin\TagController::class)->except(['create', 'edit', 'show', 'update']);
+    Route::resource('tags', TagController::class)->except(['create', 'edit', 'show', 'update']);
 
-    Route::get('reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
-    Route::get('reviews/{review}', [\App\Http\Controllers\Admin\ReviewController::class, 'show'])->name('reviews.show');
-    Route::post('reviews/{review}/status', [\App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])->name('reviews.status');
-    Route::delete('reviews/{review}', [\App\Http\Controllers\Admin\ReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+    Route::post('reviews/{review}/status', [ReviewController::class, 'updateStatus'])->name('reviews.status');
+    Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
-    Route::get('variants', [\App\Http\Controllers\Admin\VariantController::class, 'index'])->name('variants.index');
+    Route::get('variants', [VariantController::class, 'index'])->name('variants.index');
 
-    Route::get('contacts', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('contacts.index');
-    Route::get('contacts/{contact}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'show'])->name('contacts.show');
-    Route::post('contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactMessageController::class, 'reply'])->name('contacts.reply');
-    Route::post('contacts/{contact}/close', [\App\Http\Controllers\Admin\ContactMessageController::class, 'close'])->name('contacts.close');
+    Route::get('contacts', [ContactMessageController::class, 'index'])->name('contacts.index');
+    Route::get('contacts/{contact}', [ContactMessageController::class, 'show'])->name('contacts.show');
+    Route::post('contacts/{contact}/reply', [ContactMessageController::class, 'reply'])->name('contacts.reply');
+    Route::post('contacts/{contact}/close', [ContactMessageController::class, 'close'])->name('contacts.close');
 
     Route::prefix('settings')->name('settings.')->group(function (): void {
         Route::resource('currencies', CurrencyController::class);
