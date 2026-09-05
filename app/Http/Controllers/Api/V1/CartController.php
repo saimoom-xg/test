@@ -20,26 +20,28 @@ class CartController extends Controller
 
     public function show(Request $request): JsonResponse
     {
+        $sessionId = $this->resolveSessionId($request);
         $cart = $this->cartService->getOrCreateCart(
-            $this->resolveSessionId($request),
-            $request->user()?->id
+            $sessionId,
+            $request->user()
         );
 
         $cart->load('items.product.images');
 
-        return response()->json(['data' => new CartResource($cart)]);
+        return $this->cartResponse(['data' => new CartResource($cart)], $sessionId);
     }
 
     public function addItem(AddCartItemRequest $request): JsonResponse
     {
+        $sessionId = $this->resolveSessionId($request);
         $product = Product::query()->findOrFail($request->integer('product_id'));
         $variant = $request->filled('variant_id')
             ? ProductVariant::query()->findOrFail($request->integer('variant_id'))
             : null;
 
         $cart = $this->cartService->getOrCreateCart(
-            $this->resolveSessionId($request),
-            $request->user()?->id
+            $sessionId,
+            $request->user()
         );
 
         $this->cartService->addItem(
@@ -50,17 +52,18 @@ class CartController extends Controller
             $request->array('options') ?? []
         );
 
-        return response()->json([
+        return $this->cartResponse([
             'message' => __('Item added to cart.'),
             'data' => new CartResource($cart->fresh('items.product.images')),
-        ]);
+        ], $sessionId);
     }
 
     public function updateItem(UpdateCartItemRequest $request, int $item): JsonResponse
     {
+        $sessionId = $this->resolveSessionId($request);
         $cart = $this->cartService->getOrCreateCart(
-            $this->resolveSessionId($request),
-            $request->user()?->id
+            $sessionId,
+            $request->user()
         );
 
         $updated = $this->cartService->updateQuantity($cart, $item, $request->integer('quantity'));
@@ -69,40 +72,42 @@ class CartController extends Controller
             return response()->json(['message' => __('Cart item not found.')], 404);
         }
 
-        return response()->json([
+        return $this->cartResponse([
             'message' => __('Cart updated.'),
             'data' => new CartResource($cart->fresh('items.product.images')),
-        ]);
+        ], $sessionId);
     }
 
     public function removeItem(Request $request, int $item): JsonResponse
     {
+        $sessionId = $this->resolveSessionId($request);
         $cart = $this->cartService->getOrCreateCart(
-            $this->resolveSessionId($request),
-            $request->user()?->id
+            $sessionId,
+            $request->user()
         );
 
         $this->cartService->removeItem($cart, $item);
 
-        return response()->json([
+        return $this->cartResponse([
             'message' => __('Item removed.'),
             'data' => new CartResource($cart->fresh('items.product.images')),
-        ]);
+        ], $sessionId);
     }
 
     public function clear(Request $request): JsonResponse
     {
+        $sessionId = $this->resolveSessionId($request);
         $cart = $this->cartService->getOrCreateCart(
-            $this->resolveSessionId($request),
-            $request->user()?->id
+            $sessionId,
+            $request->user()
         );
 
         $cart->items()->delete();
 
-        return response()->json([
+        return $this->cartResponse([
             'message' => __('Cart cleared.'),
             'data' => new CartResource($cart->fresh('items')),
-        ]);
+        ], $sessionId);
     }
 
     public function merge(Request $request): JsonResponse
@@ -126,10 +131,15 @@ class CartController extends Controller
             $customerCart = $this->cartService->mergeGuestCartInto($guestCart, $customerCart);
         }
 
-        return response()->json([
+        return $this->cartResponse([
             'message' => __('Carts merged.'),
             'data' => new CartResource($customerCart->load('items.product.images')),
-        ]);
+        ], $sessionId);
+    }
+
+    private function cartResponse(array $payload, string $sessionId): JsonResponse
+    {
+        return response()->json($payload)->withCookie(cookie('cart_session_id', $sessionId, 60 * 24 * 30));
     }
 
     private function resolveSessionId(Request $request): string

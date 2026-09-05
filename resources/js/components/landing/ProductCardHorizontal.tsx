@@ -1,3 +1,9 @@
+import { router } from '@inertiajs/react';
+import { useState } from 'react';
+import { FaStar } from 'react-icons/fa6';
+import { toast } from 'sonner';
+import { useCurrency } from '@/hooks/use-currency';
+
 type ProductCardHorizontalProps = {
     id: number;
     name: string;
@@ -7,6 +13,29 @@ type ProductCardHorizontalProps = {
 };
 
 export default function ProductCardHorizontal({ id, name, price, image, rating = 5 }: ProductCardHorizontalProps) {
+    const { formatPrice } = useCurrency();
+    const [isAdding, setIsAdding] = useState(false);
+
+    const addToCart = (e: React.MouseEvent): void => {
+        e.stopPropagation();
+        if (isAdding) return;
+        setIsAdding(true);
+
+        router.post('/cart/items', {
+            product_id: id,
+            quantity: 1,
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success(`${name} added to cart!`);
+            },
+            onError: () => {
+                toast.error('Failed to add item to cart.');
+            },
+            onFinish: () => setIsAdding(false),
+        });
+    };
+
     return (
         <div className="bg-white/60 backdrop-blur-md rounded-[2rem] p-6 shadow-sm border border-white flex items-center gap-6 hover:shadow-md transition-shadow cursor-pointer">
             <div className="w-32 h-32 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
@@ -17,14 +46,20 @@ export default function ProductCardHorizontal({ id, name, price, image, rating =
                 )}
             </div>
             <div className="flex-grow">
-                <div className="flex text-yellow-400 text-xs mb-2">
+                <div className="flex text-brand-yellow text-xs mb-2">
                     {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i}>★</span>
+                        <FaStar key={i} />
                     ))}
                 </div>
                 <h4 className="font-bold text-lg text-black mb-1">{name}</h4>
-                <p className="text-gray-700 font-bold mb-3">${price.toFixed(2)}</p>
-                <button className="text-sm font-bold border-b-2 border-black pb-1 hover:text-yellow-400 hover:border-yellow-400 transition-colors">Add to Cart</button>
+                <p className="text-brand-dark font-bold mb-3">{formatPrice(price)}</p>
+                <button
+                    onClick={addToCart}
+                    disabled={isAdding}
+                    className="text-sm font-bold border-b-2 border-black pb-1 hover:text-brand-yellow hover:border-brand-yellow transition-colors disabled:opacity-50"
+                >
+                    {isAdding ? 'Adding...' : 'Add to Cart'}
+                </button>
             </div>
         </div>
     );

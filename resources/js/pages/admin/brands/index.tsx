@@ -1,6 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { Plus, Trash2, Edit } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +11,8 @@ type Brand = {
     id: number;
     name: string;
     slug: string;
+    description: string | null;
+    logo: string | null;
     is_active: boolean;
     products_count: number;
 };
@@ -21,15 +23,45 @@ type Props = { brands: Paginated<Brand> };
 
 export default function BrandsIndex({ brands }: Props) {
     const [creating, setCreating] = useState(false);
-    const form = useForm({ name: '', is_active: true });
+    const [editing, setEditing] = useState<Brand | null>(null);
+    
+    const form = useForm({ 
+        name: '', 
+        description: '', 
+        is_active: true,
+        logo: null as File | null,
+    });
+
+    useEffect(() => {
+        if (editing) {
+            form.setData({
+                name: editing.name,
+                description: editing.description || '',
+                is_active: editing.is_active,
+                logo: null,
+            });
+        } else if (!creating) {
+            form.reset();
+        }
+    }, [editing, creating]);
 
     const submit = (e: React.FormEvent): void => {
         e.preventDefault();
-        form.post('/admin/brands', {
+        
+        form.transform((data) => ({
+            ...data,
+            ...(editing ? { _method: 'put' } : {}),
+        }));
+
+        const url = editing ? `/admin/brands/${editing.id}` : '/admin/brands';
+
+        form.post(url, {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => {
                 form.reset();
                 setCreating(false);
+                setEditing(null);
             },
         });
     };
@@ -42,16 +74,19 @@ export default function BrandsIndex({ brands }: Props) {
                     <div>
                         <h1 className="text-2xl font-semibold tracking-tight">Brands</h1>
                     </div>
-                    <Button onClick={() => setCreating(!creating)}>
+                    <Button onClick={() => {
+                        setEditing(null);
+                        setCreating(!creating);
+                    }}>
                         <Plus className="mr-2 h-4 w-4" />
                         New brand
                     </Button>
                 </div>
 
-                {creating ? (
+                {creating || editing ? (
                     <Card>
                         <CardHeader>
-                            <CardTitle>New brand</CardTitle>
+                            <CardTitle>{editing ? 'Edit brand' : 'New brand'}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={submit} className="grid gap-4 md:grid-cols-3">
@@ -64,7 +99,26 @@ export default function BrandsIndex({ brands }: Props) {
                                     />
                                     <InputError message={form.errors.name} />
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="space-y-2 md:col-span-1">
+                                    <Label htmlFor="logo">Logo (Image)</Label>
+                                    <Input
+                                        id="logo"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => form.setData('logo', e.target.files?.[0] || null)}
+                                    />
+                                    <InputError message={form.errors.logo} />
+                                </div>
+                                <div className="space-y-2 md:col-span-3">
+                                    <Label htmlFor="description">Description</Label>
+                                    <textarea
+                                        id="description"
+                                        className="border-input flex min-h-[60px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs"
+                                        value={form.data.description}
+                                        onChange={(e) => form.setData('description', e.target.value)}
+                                    />
+                                </div>
+                                <div className="flex items-center gap-2 md:col-span-3">
                                     <input
                                         id="is_active"
                                         type="checkbox"
@@ -74,7 +128,10 @@ export default function BrandsIndex({ brands }: Props) {
                                     <Label htmlFor="is_active">Active</Label>
                                 </div>
                                 <div className="md:col-span-3 flex justify-end gap-2">
-                                    <Button type="button" variant="ghost" onClick={() => setCreating(false)}>
+                                    <Button type="button" variant="ghost" onClick={() => {
+                                        setCreating(false);
+                                        setEditing(null);
+                                    }}>
                                         Cancel
                                     </Button>
                                     <Button type="submit" disabled={form.processing}>
@@ -91,6 +148,7 @@ export default function BrandsIndex({ brands }: Props) {
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="text-muted-foreground border-b text-left text-xs uppercase">
+                                    <th className="px-6 py-3 font-medium w-16">Logo</th>
                                     <th className="px-6 py-3 font-medium">Name</th>
                                     <th className="px-6 py-3 font-medium">Slug</th>
                                     <th className="px-6 py-3 text-right font-medium">Products</th>
@@ -101,6 +159,13 @@ export default function BrandsIndex({ brands }: Props) {
                             <tbody>
                                 {brands.data.map((brand) => (
                                     <tr key={brand.id} className="hover:bg-muted/40 border-b">
+                                        <td className="px-6 py-3">
+                                            {brand.logo ? (
+                                                <img src={`/storage/${brand.logo}`} alt={brand.name} className="w-8 h-8 rounded-full object-cover border" />
+                                            ) : (
+                                                <div className="w-8 h-8 rounded-full bg-gray-200" />
+                                            )}
+                                        </td>
                                         <td className="px-6 py-3 font-medium">{brand.name}</td>
                                         <td className="text-muted-foreground px-6 py-3 font-mono text-xs">
                                             {brand.slug}
@@ -114,19 +179,30 @@ export default function BrandsIndex({ brands }: Props) {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => {
+                                                    setCreating(false);
+                                                    setEditing(brand);
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }}
+                                            >
+                                                <Edit className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => {
                                                     if (confirm('Delete this brand?')) {
                                                         router.delete(`/admin/brands/${brand.id}`);
                                                     }
                                                 }}
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4 text-red-500" />
                                             </Button>
                                         </td>
                                     </tr>
                                 ))}
                                 {brands.data.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="text-muted-foreground px-6 py-12 text-center text-sm">
+                                        <td colSpan={6} className="text-muted-foreground px-6 py-12 text-center text-sm">
                                             No brands yet.
                                         </td>
                                     </tr>

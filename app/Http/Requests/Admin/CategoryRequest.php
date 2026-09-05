@@ -20,6 +20,7 @@ class CategoryRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:255', 'unique:categories,slug'.($categoryId ? ','.$categoryId : '')],
             'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:2048'],
             'is_active' => ['boolean'],
             'sort_order' => ['nullable', 'integer'],
         ];

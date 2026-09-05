@@ -24,7 +24,7 @@ const userNavItems: NavItem[] = [
     },
     {
         title: 'Wishlist',
-        href: '#',
+        href: '/user/wishlist',
         icon: Heart,
     },
     {
@@ -35,8 +35,6 @@ const userNavItems: NavItem[] = [
 ];
 
 export function UserSidebar() {
-    const { auth } = usePage().props as any;
-    
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -56,7 +54,7 @@ export function UserSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavUser user={auth?.user} />
+                <NavUser />
             </SidebarFooter>
         </Sidebar>
     );

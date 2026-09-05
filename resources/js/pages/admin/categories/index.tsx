@@ -1,6 +1,6 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { Head, router, useForm } from '@inertiajs/react';
+import { Plus, Trash2, Edit } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,12 +11,15 @@ type Category = {
     id: number;
     name: string;
     slug: string;
+    description: string | null;
+    image: string | null;
     is_active: boolean;
     products_count: number;
     parent: { id: number; name: string } | null;
+    parent_id: number | null;
 };
 
-type Paginated<T> = { data: T[]; links: { url: string | null; label: string; active: boolean }[]; meta: { current_page: number; last_page: number } };
+type Paginated<T> = { data: T[]; links: any[]; meta: any };
 
 type Props = {
     categories: Paginated<Category>;
@@ -26,20 +29,47 @@ type Props = {
 
 export default function CategoriesIndex({ categories, allCategories }: Props) {
     const [creating, setCreating] = useState(false);
+    const [editing, setEditing] = useState<Category | null>(null);
 
     const form = useForm({
         name: '',
         parent_id: '',
+        description: '',
         is_active: true,
+        image: null as File | null,
     });
+
+    useEffect(() => {
+        if (editing) {
+            form.setData({
+                name: editing.name,
+                parent_id: editing.parent_id ? String(editing.parent_id) : '',
+                description: editing.description || '',
+                is_active: editing.is_active,
+                image: null,
+            });
+        } else if (!creating) {
+            form.reset();
+        }
+    }, [editing, creating]);
 
     const submit = (e: React.FormEvent): void => {
         e.preventDefault();
-        form.post('/admin/categories', {
+        
+        form.transform((data) => ({
+            ...data,
+            ...(editing ? { _method: 'put' } : {}),
+        }));
+
+        const url = editing ? `/admin/categories/${editing.id}` : '/admin/categories';
+
+        form.post(url, {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => {
                 form.reset();
                 setCreating(false);
+                setEditing(null);
             },
         });
     };
@@ -54,16 +84,19 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
                         <h1 className="text-2xl font-semibold tracking-tight">Categories</h1>
                         <p className="text-muted-foreground text-sm">Organize your catalog</p>
                     </div>
-                    <Button onClick={() => setCreating(!creating)}>
+                    <Button onClick={() => {
+                        setEditing(null);
+                        setCreating(!creating);
+                    }}>
                         <Plus className="mr-2 h-4 w-4" />
                         New category
                     </Button>
                 </div>
 
-                {creating ? (
+                {creating || editing ? (
                     <Card>
                         <CardHeader>
-                            <CardTitle>New category</CardTitle>
+                            <CardTitle>{editing ? 'Edit category' : 'New category'}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={submit} className="grid gap-4 md:grid-cols-3">
@@ -85,12 +118,31 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
                                         onChange={(e) => form.setData('parent_id', e.target.value)}
                                     >
                                         <option value="">— None —</option>
-                                        {allCategories.map((c) => (
+                                        {allCategories.filter(c => c.id !== editing?.id).map((c) => (
                                             <option key={c.id} value={c.id}>
                                                 {c.name}
                                             </option>
                                         ))}
                                     </select>
+                                </div>
+                                <div className="space-y-2 md:col-span-1">
+                                    <Label htmlFor="image">Image</Label>
+                                    <Input
+                                        id="image"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => form.setData('image', e.target.files?.[0] || null)}
+                                    />
+                                    <InputError message={form.errors.image} />
+                                </div>
+                                <div className="space-y-2 md:col-span-2">
+                                    <Label htmlFor="description">Description</Label>
+                                    <textarea
+                                        id="description"
+                                        className="border-input flex min-h-[60px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs"
+                                        value={form.data.description}
+                                        onChange={(e) => form.setData('description', e.target.value)}
+                                    />
                                 </div>
                                 <div className="md:col-span-3 flex items-center gap-2">
                                     <input
@@ -102,7 +154,10 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
                                     <Label htmlFor="is_active">Active</Label>
                                 </div>
                                 <div className="md:col-span-3 flex justify-end gap-2">
-                                    <Button type="button" variant="ghost" onClick={() => setCreating(false)}>
+                                    <Button type="button" variant="ghost" onClick={() => {
+                                        setCreating(false);
+                                        setEditing(null);
+                                    }}>
                                         Cancel
                                     </Button>
                                     <Button type="submit" disabled={form.processing}>
@@ -119,6 +174,7 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="text-muted-foreground border-b text-left text-xs uppercase">
+                                    <th className="px-6 py-3 font-medium w-16">Image</th>
                                     <th className="px-6 py-3 font-medium">Name</th>
                                     <th className="px-6 py-3 font-medium">Parent</th>
                                     <th className="px-6 py-3 text-right font-medium">Products</th>
@@ -129,6 +185,13 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
                             <tbody>
                                 {categories.data.map((category) => (
                                     <tr key={category.id} className="hover:bg-muted/40 border-b">
+                                        <td className="px-6 py-3">
+                                            {category.image ? (
+                                                <img src={`/storage/${category.image}`} alt={category.name} className="w-8 h-8 rounded-full object-cover border" />
+                                            ) : (
+                                                <div className="w-8 h-8 rounded-full bg-gray-200" />
+                                            )}
+                                        </td>
                                         <td className="px-6 py-3 font-medium">{category.name}</td>
                                         <td className="px-6 py-3">{category.parent?.name ?? '—'}</td>
                                         <td className="px-6 py-3 text-right">{category.products_count}</td>
@@ -148,6 +211,17 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => {
+                                                    setCreating(false);
+                                                    setEditing(category);
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }}
+                                            >
+                                                <Edit className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => {
                                                     if (confirm('Delete this category?')) {
                                                         router.delete(
                                                             `/admin/categories/${category.id}`,
@@ -155,14 +229,14 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
                                                     }
                                                 }}
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4 text-red-500" />
                                             </Button>
                                         </td>
                                     </tr>
                                 ))}
                                 {categories.data.length === 0 ? (
                                     <tr>
-                                        <td colSpan={4} className="text-muted-foreground px-6 py-12 text-center text-sm">
+                                        <td colSpan={6} className="text-muted-foreground px-6 py-12 text-center text-sm">
                                             No categories yet.
                                         </td>
                                     </tr>
@@ -175,8 +249,6 @@ export default function CategoriesIndex({ categories, allCategories }: Props) {
         </>
     );
 }
-
-void Link;
 
 CategoriesIndex.layout = {
     breadcrumbs: [

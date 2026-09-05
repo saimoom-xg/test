@@ -7,6 +7,7 @@ use App\Http\Requests\Web\Auth\RequestOtpRequest;
 use App\Http\Requests\Web\Auth\VerifyOtpRequest;
 use App\Models\Customer;
 use App\Models\User;
+use App\Services\CartService;
 use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,10 @@ use Spatie\Permission\Models\Role;
 
 class OtpLoginController extends Controller
 {
-    public function __construct(private readonly OtpService $otp) {}
+    public function __construct(
+        private readonly OtpService $otp,
+        private readonly CartService $cartService,
+    ) {}
 
     public function show(): Response
     {
@@ -117,7 +121,11 @@ class OtpLoginController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        return redirect()->intended('/dashboard');
+        $guestSessionId = $request->cookie('cart_session_id');
+        $cart = $this->cartService->getOrCreateCart($guestSessionId, $user);
+
+        return redirect()->intended('/dashboard')
+            ->withCookie(cookie('cart_session_id', $cart->session_id, 60 * 24 * 30));
     }
 
     private function ensureUserRole(User $user): void

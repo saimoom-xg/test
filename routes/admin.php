@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\FlashSaleController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -42,6 +43,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('products/{product}', [ProductController::class, 'update']);
     Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::delete('product-images/batch', [ProductImageController::class, 'batchDestroy'])->name('product-images.batch-destroy');
+    Route::delete('product-images/{productImage}', [ProductImageController::class, 'destroy'])->name('product-images.destroy');
 
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');

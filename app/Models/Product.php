@@ -113,6 +113,12 @@ class Product extends Model
         return $this->hasMany(ProductReview::class);
     }
 
+    /** @return HasMany<Wishlist> */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
     public function getAvailableQuantityAttribute(): int
     {
         return max(0, $this->stock_quantity - $this->reserved_quantity);

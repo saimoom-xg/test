@@ -160,10 +160,10 @@ class OtpService
 
     private function deliver(string $channel, string $identifier, string $code): void
     {
+        Log::info("OTP generated for {$channel} ({$identifier}): {$code}");
+
         if ($channel === 'email') {
             Mail::to($identifier)->send(new OtpCodeMail($code, self::OTP_TTL_MINUTES));
-        } else {
-            Log::info("OTP for phone {$identifier}: {$code}");
         }
     }
 }

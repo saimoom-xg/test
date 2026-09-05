@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card - Curvy Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        cardBg: '#ffffff',
+                        pageBg: '#202125',
+                        textMain: '#262615',
+                        textMuted: '#928f44',
+                        iconMuted: '#a5a14d',
+                        btnBg: '#2a2b30',
+                        btnBorder: '#35363c',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #202125;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+        .concave-corner {
+            background: radial-gradient(circle at 100% 0%, transparent 31.5px, var(--tw-colors-cardBg, #ffffff) 32px);
+        }
+    </style>
+</head>
+<body class="antialiased text-textMain">
+
+    <div class="relative w-[420px]">
+        
+        <!-- Action Buttons -->
+        <div class="absolute top-3 right-0 flex gap-3 z-20">
+            <button class="w-[46px] h-[46px] rounded-full bg-btnBg border border-btnBorder text-gray-400 flex items-center justify-center hover:bg-gray-700 hover:text-red-400 transition-colors group">
+                <i data-lucide="heart" class="w-[18px] h-[18px] group-hover:fill-red-400"></i>
+            </button>
+            <button class="w-[46px] h-[46px] rounded-full bg-btnBg border border-btnBorder text-gray-400 flex items-center justify-center hover:bg-gray-700 transition-colors">
+                <i data-lucide="share-2" class="w-[20px] h-[20px]"></i>
+            </button>
+        </div>
+
+        <!-- Card Container -->
+        <div class="relative drop-shadow-2xl">
+            <!-- Tab -->
+            <div class="bg-cardBg w-[70%] h-[75px] rounded-tl-[32px] rounded-tr-[32px] relative z-10 flex items-center px-7">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="tag" class="w-[20px] h-[20px] text-gray-500 stroke-[2]"></i>
+                    <span class="font-semibold text-[19px] text-textMain tracking-wide">Sneakers</span>
+                </div>
+                <!-- Concave curve placed right next to the tab, at the bottom -->
+                <div class="absolute -right-[32px] bottom-0 w-[32px] h-[32px] concave-corner pointer-events-none"></div>
+            </div>
+
+            <!-- Main Body -->
+            <div class="bg-cardBg w-full rounded-b-[32px] rounded-tr-[32px] px-8 pt-4 pb-9 relative z-0">
+                <!-- Product Image -->
+                <div class="w-full h-[220px] bg-[#f4f4f4] rounded-[24px] mb-6 flex items-center justify-center overflow-hidden relative group">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop" alt="Nike Shoe" class="w-full h-full object-cover mix-blend-multiply drop-shadow-2xl scale-[1.15] transition-transform duration-500 group-hover:scale-[1.25] group-hover:-rotate-6" />
+                    <!-- Badge -->
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase text-black shadow-sm">
+                        New
+                    </div>
+                </div>
+                
+                <!-- Product Info -->
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h2 class="text-[24px] font-bold text-textMain leading-tight">Nike Air Max 270</h2>
+                        <p class="text-[14px] font-medium text-gray-400 mt-1">Men's Running Shoes</p>
+                    </div>
+                    <div class="text-[24px] font-bold text-black tracking-tight">$150</div>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button class="w-full mt-7 bg-black text-white h-[56px] rounded-[20px] font-semibold text-[16px] flex items-center justify-center gap-2 hover:bg-gray-800 hover:shadow-lg transition-all active:scale-[0.98]">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    Add to Cart
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

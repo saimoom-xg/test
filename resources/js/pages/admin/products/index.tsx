@@ -1,10 +1,17 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Plus, Search } from 'lucide-react';
+import { Image as ImageIcon, Plus, Search } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+
+type ProductImage = {
+    id: number;
+    path: string;
+    alt: string | null;
+    is_primary: boolean;
+};
 
 type Product = {
     id: number;
@@ -16,6 +23,7 @@ type Product = {
     is_featured: boolean;
     status: string;
     brand: { id: number; name: string } | null;
+    images?: ProductImage[];
 };
 
 type Paginated<T> = {
@@ -36,13 +44,19 @@ function formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 }
 
+function getImageUrl(path?: string | null): string | null {
+    if (!path) return null;
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    return `/storage/${path}`;
+}
+
 export default function ProductsIndex({ products, filters, brands, categories }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
 
     const apply = (overrides: Partial<typeof filters> = {}): void => {
         router.get(
             '/admin/products',
-            { ...filters, search, ...overrides, search: overrides.search ?? search },
+            { ...filters, ...overrides, search: overrides.search ?? search },
             { preserveState: true, replace: true },
         );
     };
@@ -134,6 +148,7 @@ export default function ProductsIndex({ products, filters, brands, categories }:
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr className="text-muted-foreground border-b text-left text-xs uppercase">
+                                            <th className="py-3 w-14 font-medium">Image</th>
                                             <th className="py-3 font-medium">Name</th>
                                             <th className="py-3 font-medium">SKU</th>
                                             <th className="py-3 font-medium">Brand</th>
@@ -143,46 +158,69 @@ export default function ProductsIndex({ products, filters, brands, categories }:
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {products.data.map((product) => (
-                                            <tr key={product.id} className="hover:bg-muted/40 border-b">
-                                                <td className="py-3">
-                                                    <Link
-                                                        href={`/admin/products/${product.id}/edit`}
-                                                        className="font-medium hover:underline"
-                                                    >
-                                                        {product.name}
-                                                    </Link>
-                                                    {product.is_featured ? (
-                                                        <Badge variant="secondary" className="ml-2">
-                                                            Featured
+                                        {products.data.map((product) => {
+                                            const primaryImage = product.images?.find((img) => img.is_primary) ?? product.images?.[0];
+                                            const imageUrl = getImageUrl(primaryImage?.path);
+
+                                            return (
+                                                <tr key={product.id} className="hover:bg-muted/40 border-b">
+                                                    <td className="py-2.5">
+                                                        <Link
+                                                            href={`/admin/products/${product.id}/edit`}
+                                                            className="group relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted/40 transition-all hover:ring-2 hover:ring-primary/20"
+                                                            title={`Edit ${product.name}`}
+                                                        >
+                                                            {imageUrl ? (
+                                                                <img
+                                                                    src={imageUrl}
+                                                                    alt={primaryImage?.alt || product.name}
+                                                                    className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                                                                    loading="lazy"
+                                                                />
+                                                            ) : (
+                                                                <ImageIcon className="h-4 w-4 text-muted-foreground/40" />
+                                                            )}
+                                                        </Link>
+                                                    </td>
+                                                    <td className="py-3">
+                                                        <Link
+                                                            href={`/admin/products/${product.id}/edit`}
+                                                            className="font-medium hover:underline"
+                                                        >
+                                                            {product.name}
+                                                        </Link>
+                                                        {product.is_featured ? (
+                                                            <Badge variant="secondary" className="ml-2">
+                                                                Featured
+                                                            </Badge>
+                                                        ) : null}
+                                                    </td>
+                                                    <td className="text-muted-foreground py-3 font-mono text-xs">
+                                                        {product.sku}
+                                                    </td>
+                                                    <td className="py-3">{product.brand?.name ?? '—'}</td>
+                                                    <td className="py-3 text-right font-medium">
+                                                        {formatCurrency(product.price)}
+                                                    </td>
+                                                    <td className="py-3 text-right">
+                                                        <Badge
+                                                            variant={
+                                                                product.stock_quantity <= 5
+                                                                    ? 'destructive'
+                                                                    : 'secondary'
+                                                            }
+                                                        >
+                                                            {product.stock_quantity}
                                                         </Badge>
-                                                    ) : null}
-                                                </td>
-                                                <td className="text-muted-foreground py-3 font-mono text-xs">
-                                                    {product.sku}
-                                                </td>
-                                                <td className="py-3">{product.brand?.name ?? '—'}</td>
-                                                <td className="py-3 text-right font-medium">
-                                                    {formatCurrency(product.price)}
-                                                </td>
-                                                <td className="py-3 text-right">
-                                                    <Badge
-                                                        variant={
-                                                            product.stock_quantity <= 5
-                                                                ? 'destructive'
-                                                                : 'secondary'
-                                                        }
-                                                    >
-                                                        {product.stock_quantity}
-                                                    </Badge>
-                                                </td>
-                                                <td className="py-3">
-                                                    <Badge variant={product.is_active ? 'default' : 'outline'}>
-                                                        {product.status}
-                                                    </Badge>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td className="py-3">
+                                                        <Badge variant={product.is_active ? 'default' : 'outline'}>
+                                                            {product.status}
+                                                        </Badge>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

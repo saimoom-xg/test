@@ -1,4 +1,4 @@
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import UserLayout from '@/layouts/user-layout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Package, MapPin, Heart } from 'lucide-react';
@@ -37,15 +37,17 @@ export default function UserDashboard() {
                         </CardContent>
                     </Card>
 
-                    <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-xl font-semibold">Wishlist</CardTitle>
-                            <Heart className="h-6 w-6 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <CardDescription>View and manage your saved items.</CardDescription>
-                        </CardContent>
-                    </Card>
+                    <Link href="/user/wishlist" className="block">
+                        <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-xl font-semibold">Wishlist</CardTitle>
+                                <Heart className="h-6 w-6 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <CardDescription>View and manage your saved items.</CardDescription>
+                            </CardContent>
+                        </Card>
+                    </Link>
                 </div>
 
                 <Card className="mt-4">

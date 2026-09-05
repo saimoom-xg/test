@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Customer;
@@ -170,39 +168,7 @@ class DatabaseSeeder extends Seeder
 
     private function seedCatalog(): void
     {
-        if (Category::count() > 0) {
-            return;
-        }
-
-        $rootCategories = ['Electronics', 'Apparel', 'Home & Kitchen', 'Beauty', 'Sports'];
-        $categoryIds = [];
-
-        foreach ($rootCategories as $name) {
-            $category = Category::factory()->create([
-                'name' => $name,
-                'sort_order' => array_search($name, $rootCategories),
-            ]);
-            $categoryIds[$name] = $category->id;
-        }
-
-        foreach (['Smartphones', 'Laptops', 'Accessories'] as $sub) {
-            Category::factory()->create([
-                'name' => $sub,
-                'parent_id' => $categoryIds['Electronics'],
-            ]);
-        }
-
-        Brand::factory()->count(8)->create();
-
-        $products = Product::factory()->count(60)->create();
-        $brands = Brand::all();
-
-        foreach ($products as $product) {
-            $product->update(['brand_id' => $brands->random()->id]);
-            $product->categories()->attach(
-                collect($categoryIds)->keys()->random(rand(1, 2))->map(fn ($n) => $categoryIds[$n])
-            );
-        }
+        $this->call(ChocolateCatalogSeeder::class);
     }
 
     private function seedCustomersAndOrders(): void

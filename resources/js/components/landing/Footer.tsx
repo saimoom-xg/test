@@ -29,20 +29,20 @@ export default function Footer({
                             </div>
                             <span className="text-2xl font-bold tracking-tight text-black">{brandName}</span>
                         </div>
-                        <p className="text-[15px] font-medium text-gray-500 leading-relaxed pr-4">{description}</p>
+                        <p className="text-[15px] font-medium text-brand-gray leading-relaxed pr-4">{description}</p>
                         <div className="flex gap-4">
-                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-yellow-400 transition-all shadow-sm hover:shadow-md"><FaFacebookF /></a>
-                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-yellow-400 transition-all shadow-sm hover:shadow-md"><FaTwitter /></a>
-                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-yellow-400 transition-all shadow-sm hover:shadow-md"><FaInstagram /></a>
+                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><FaFacebookF /></a>
+                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><FaTwitter /></a>
+                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><FaInstagram /></a>
                         </div>
                     </div>
                     <div>
                         <h4 className="font-bold text-xl text-black mb-8">Quick Links</h4>
-                        <ul className="space-y-4 text-[15px] font-medium text-gray-500">
+                        <ul className="space-y-4 text-[15px] font-medium text-brand-gray">
                             {quickLinks.map((item) => (
                                 <li key={item}>
                                     <Link href="#" className="hover:text-black transition-colors flex items-center gap-2">
-                                        <ChevronRight className="text-xs" /> {item}
+                                        <ChevronRight className="w-3 h-3" /> {item}
                                     </Link>
                                 </li>
                             ))}
@@ -50,11 +50,11 @@ export default function Footer({
                     </div>
                     <div>
                         <h4 className="font-bold text-xl text-black mb-8">Customer Service</h4>
-                        <ul className="space-y-4 text-[15px] font-medium text-gray-500">
+                        <ul className="space-y-4 text-[15px] font-medium text-brand-gray">
                             {customerServiceLinks.map((item) => (
                                 <li key={item}>
                                     <Link href="#" className="hover:text-black transition-colors flex items-center gap-2">
-                                        <ChevronRight className="text-xs" /> {item}
+                                        <ChevronRight className="w-3 h-3" /> {item}
                                     </Link>
                                 </li>
                             ))}
@@ -62,16 +62,16 @@ export default function Footer({
                     </div>
                     <div>
                         <h4 className="font-bold text-xl text-black mb-8">Newsletter</h4>
-                        <p className="text-[15px] font-medium text-gray-500 mb-6">Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+                        <p className="text-[15px] font-medium text-brand-gray mb-6">Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
                         <div className="relative">
-                            <input type="email" placeholder="Enter your email" className="w-full bg-white border border-white/50 rounded-full pl-6 pr-32 py-[14px] text-[15px] outline-none focus:border-yellow-400 shadow-sm font-medium transition-colors" />
-                            <button className="absolute right-1.5 top-1.5 bottom-1.5 bg-black text-white px-6 rounded-full text-[15px] font-bold hover:bg-yellow-400 hover:text-black transition-colors shadow-md">Subscribe</button>
+                            <input type="email" placeholder="Enter your email" className="w-full bg-white border border-white/50 rounded-full pl-6 pr-32 py-[14px] text-[15px] outline-none focus:border-brand-yellow shadow-sm font-medium transition-colors" />
+                            <button className="absolute right-1.5 top-1.5 bottom-1.5 bg-black text-white px-6 rounded-full text-[15px] font-bold hover:bg-brand-yellow hover:text-black transition-colors shadow-md">Subscribe</button>
                         </div>
                     </div>
                 </div>
                 <div className="border-t border-gray-300/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-[15px] font-medium text-gray-500">&copy; 2026 {brandName}. All rights reserved.</p>
-                    <div className="flex gap-8 text-[15px] font-medium text-gray-500">
+                    <p className="text-[15px] font-medium text-brand-gray">&copy; 2026 {brandName}. All rights reserved.</p>
+                    <div className="flex gap-8 text-[15px] font-medium text-brand-gray">
                         <Link href="#" className="hover:text-black transition-colors">Privacy Policy</Link>
                         <Link href="#" className="hover:text-black transition-colors">Terms of Service</Link>
                     </div>

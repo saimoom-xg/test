@@ -19,6 +19,7 @@ class BrandRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:brands,slug'.($brandId ? ','.$brandId : '')],
             'description' => ['nullable', 'string'],
+            'logo' => ['nullable', 'image', 'max:2048'],
             'is_active' => ['boolean'],
         ];
     }

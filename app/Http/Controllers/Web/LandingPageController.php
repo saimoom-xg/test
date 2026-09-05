@@ -18,8 +18,15 @@ class LandingPageController extends Controller
             ->where('status', 'published')
             ->where('is_featured', true)
             ->with(['brand:id,name', 'categories:id,name', 'images'])
-            ->limit(3)
-            ->get(['id', 'name', 'slug', 'price', 'sale_price', 'brand_id', 'images']);
+            ->limit(8)
+            ->get();
+
+        $saleProducts = Product::query()
+            ->where('status', 'published')
+            ->whereNotNull('sale_price')
+            ->with(['brand:id,name', 'categories:id,name', 'images'])
+            ->limit(8)
+            ->get();
 
         $newArrivals = Product::query()
             ->where('status', 'published')
@@ -43,13 +50,11 @@ class LandingPageController extends Controller
 
         $flashSale = FlashSale::query()
             ->where('is_active', true)
-            ->where('starts_at', '<=', now())
-            ->where('ends_at', '>=', now())
-            ->with(['products' => function ($q): void {
+            ->with(['products.product' => function ($q): void {
                 $q->where('status', 'published')
-                    ->with(['images'])
-                    ->limit(1);
+                    ->with(['images', 'brand:id,name', 'categories:id,name']);
             }])
+            ->latest('id')
             ->first();
 
         $topPicks = Product::query()
@@ -65,12 +70,20 @@ class LandingPageController extends Controller
             ->limit(2)
             ->get(['id', 'name', 'slug', 'image']);
 
+        $allProducts = Product::query()
+            ->where('status', 'published')
+            ->with(['brand:id,name', 'categories:id,name', 'images'])
+            ->latest()
+            ->get();
+
         return Inertia::render('Home', [
+            'allProducts' => $allProducts,
             'featuredProducts' => $featured,
             'newArrivals' => $newArrivals,
             'bestSellers' => $bestSellers,
             'categories' => $categories,
             'flashSale' => $flashSale,
+            'saleProducts' => $saleProducts,
             'topPicks' => $topPicks,
             'collections' => $collections,
         ]);

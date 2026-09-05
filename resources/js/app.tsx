@@ -7,6 +7,8 @@ import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import DynamicRoleLayout from '@/layouts/dynamic-role-layout';
 
+import FrontendLayout from '@/layouts/frontend-layout';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 void createInertiaApp({
@@ -15,8 +17,8 @@ void createInertiaApp({
         switch (true) {
             case name === 'welcome':
                 return null;
-            case name === 'Home':
-                return null;
+            case name.startsWith('admin/'):
+                return AppLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
@@ -24,7 +26,7 @@ void createInertiaApp({
             case name.startsWith('user/'):
                 return null; // User pages manage their own layout in the component
             default:
-                return AppLayout;
+                return FrontendLayout;
         }
     },
     strictMode: true,

@@ -52,6 +52,12 @@ class Customer extends Model
         return $this->hasMany(Order::class);
     }
 
+    /** @return HasMany<Wishlist> */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
     public function getFullNameAttribute(): string
     {
         return trim(($this->first_name ?? '').' '.($this->last_name ?? ''));

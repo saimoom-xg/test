@@ -1,10 +1,10 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ImagePlus, Trash2 } from 'lucide-react';
+import { ImagePlus, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 type Brand = { id: number; name: string };
@@ -77,6 +77,47 @@ export default function ProductForm({ product, brands, categories }: Props) {
         images: [] as File[],
     });
 
+    const [selectedImages, setSelectedImages] = useState<number[]>([]);
+    const [deletingId, setDeletingId] = useState<number | 'batch' | null>(null);
+
+    const handleDeleteSingle = (imageId: number): void => {
+        if (!confirm('Are you sure you want to delete this image?')) {
+            return;
+        }
+        setDeletingId(imageId);
+        router.delete(`/admin/product-images/${imageId}`, {
+            preserveScroll: true,
+            onFinish: () => {
+                setDeletingId(null);
+                setSelectedImages((prev) => prev.filter((id) => id !== imageId));
+            },
+        });
+    };
+
+    const handleBatchDelete = (): void => {
+        if (selectedImages.length === 0) {
+            return;
+        }
+        if (!confirm(`Are you sure you want to delete ${selectedImages.length} selected images?`)) {
+            return;
+        }
+        setDeletingId('batch');
+        router.delete('/admin/product-images/batch', {
+            data: { ids: selectedImages },
+            preserveScroll: true,
+            onFinish: () => {
+                setDeletingId(null);
+                setSelectedImages([]);
+            },
+        });
+    };
+
+    const toggleSelectImage = (imageId: number): void => {
+        setSelectedImages((prev) =>
+            prev.includes(imageId) ? prev.filter((id) => id !== imageId) : [...prev, imageId],
+        );
+    };
+
     const submit = (e: React.FormEvent): void => {
         e.preventDefault();
         const url = isEdit ? `/admin/products/${product.id}` : '/admin/products';
@@ -94,7 +135,11 @@ export default function ProductForm({ product, brands, categories }: Props) {
             }
         });
 
-        form[isEdit ? 'put' : 'post'](url, data as any, {
+        if (isEdit) {
+            data.append('_method', 'PUT');
+        }
+
+        router.post(url, data, {
             preserveScroll: true,
             forceFormData: true,
         });
@@ -331,20 +376,28 @@ export default function ProductForm({ product, brands, categories }: Props) {
                                     </select>
                                 </div>
                             </CardContent>
-                            <CardFooter className="flex justify-end gap-2">
-                                <Button type="submit" disabled={form.processing}>
-                                    {isEdit ? 'Update product' : 'Create product'}
-                                </Button>
-                            </CardFooter>
                         </Card>
 
                         <Card>
-                            <CardHeader>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                                 <CardTitle>Images</CardTitle>
+                                {product.images?.length > 0 && selectedImages.length > 0 && (
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={handleBatchDelete}
+                                        disabled={deletingId !== null}
+                                        className="h-7 text-xs px-2.5"
+                                    >
+                                        <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                                        Delete Selected ({selectedImages.length})
+                                    </Button>
+                                )}
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="images">Product images</Label>
+                                    <Label htmlFor="images">Upload new images</Label>
                                     <Input
                                         id="images"
                                         type="file"
@@ -359,21 +412,94 @@ export default function ProductForm({ product, brands, categories }: Props) {
                                 </div>
 
                                 {product.images?.length > 0 && (
-                                    <div className="grid grid-cols-3 gap-3">
-                                        {product.images.map((img) => (
-                                            <div key={img.id} className="relative aspect-square rounded-md border bg-muted">
-                                                <img
-                                                    src={`/storage/${img.path}`}
-                                                    alt={img.alt ?? ''}
-                                                    className="h-full w-full rounded-md object-cover"
+                                    <div className="space-y-2.5 pt-2">
+                                        <div className="flex items-center justify-between text-xs text-muted-foreground pb-1 border-b">
+                                            <label className="flex items-center gap-2 cursor-pointer select-none">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        selectedImages.length === product.images.length &&
+                                                        product.images.length > 0
+                                                    }
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedImages(product.images.map((img) => img.id));
+                                                        } else {
+                                                            setSelectedImages([]);
+                                                        }
+                                                    }}
+                                                    className="h-3.5 w-3.5 rounded border-gray-300 text-primary cursor-pointer"
                                                 />
-                                                {img.is_primary && (
-                                                    <span className="bg-primary text-primary-foreground absolute top-1 left-1 rounded px-1.5 py-0.5 text-[10px] font-medium uppercase">
-                                                        Primary
-                                                    </span>
-                                                )}
-                                            </div>
-                                        ))}
+                                                <span>Select all ({product.images.length})</span>
+                                            </label>
+                                            <span className="text-[11px] text-muted-foreground/70">
+                                                Click trash to delete single
+                                            </span>
+                                        </div>
+
+                                        <div className="grid grid-cols-3 gap-3">
+                                            {product.images.map((img) => {
+                                                const isSelected = selectedImages.includes(img.id);
+                                                const isDeleting =
+                                                    deletingId === img.id || (deletingId === 'batch' && isSelected);
+                                                const src = img.path.startsWith('http')
+                                                    ? img.path
+                                                    : `/storage/${img.path}`;
+
+                                                return (
+                                                    <div
+                                                        key={img.id}
+                                                        className={`group relative aspect-square rounded-lg border overflow-hidden bg-muted transition-all ${
+                                                            isSelected
+                                                                ? 'ring-2 ring-destructive border-destructive'
+                                                                : 'hover:border-foreground/30'
+                                                        }`}
+                                                    >
+                                                        <img
+                                                            src={src}
+                                                            alt={img.alt ?? ''}
+                                                            className="h-full w-full object-cover"
+                                                        />
+
+                                                        {/* Checkbox for batch selection */}
+                                                        <div className="absolute top-1.5 left-1.5 z-10">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isSelected}
+                                                                onChange={() => toggleSelectImage(img.id)}
+                                                                className="h-4 w-4 rounded border-gray-300 bg-white/90 text-primary shadow-xs cursor-pointer"
+                                                                title="Select image for deletion"
+                                                            />
+                                                        </div>
+
+                                                        {/* Individual Delete Button */}
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteSingle(img.id);
+                                                            }}
+                                                            disabled={deletingId !== null}
+                                                            className="absolute top-1.5 right-1.5 z-10 flex h-6 w-6 items-center justify-center rounded-md bg-red-600 text-white shadow-xs opacity-90 transition-all hover:bg-red-700 hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer"
+                                                            title="Delete this image"
+                                                            aria-label="Delete image"
+                                                        >
+                                                            {isDeleting ? (
+                                                                <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                                                            ) : (
+                                                                <Trash2 className="h-3.5 w-3.5" />
+                                                            )}
+                                                        </button>
+
+                                                        {img.is_primary && (
+                                                            <span className="bg-primary text-primary-foreground absolute bottom-1.5 left-1.5 rounded px-1.5 py-0.5 text-[10px] font-medium uppercase shadow-xs">
+                                                                Primary
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 )}
                             </CardContent>
@@ -425,6 +551,11 @@ export default function ProductForm({ product, brands, categories }: Props) {
                                 </div>
                             </CardContent>
                         </Card>
+                        <CardFooter className="flex justify-end">
+                            <Button type="submit" disabled={form.processing}>
+                                {isEdit ? 'Update product' : 'Create product'}
+                            </Button>
+                        </CardFooter>
                     </div>
                 </form>
             </div>

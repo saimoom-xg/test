@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\BrandRequest;
 use App\Models\Brand;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,7 +29,13 @@ class BrandController extends Controller
 
     public function store(BrandRequest $request): RedirectResponse
     {
-        Brand::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('logo')) {
+            $data['logo'] = $request->file('logo')->store('brands', 'public');
+        }
+
+        Brand::create($data);
 
         return to_route('admin.brands.index')
             ->with('toast', ['type' => 'success', 'message' => 'Brand created.']);
@@ -36,7 +43,16 @@ class BrandController extends Controller
 
     public function update(BrandRequest $request, Brand $brand): RedirectResponse
     {
-        $brand->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('logo')) {
+            if ($brand->logo) {
+                Storage::disk('public')->delete($brand->logo);
+            }
+            $data['logo'] = $request->file('logo')->store('brands', 'public');
+        }
+
+        $brand->update($data);
 
         return to_route('admin.brands.index')
             ->with('toast', ['type' => 'success', 'message' => 'Brand updated.']);
@@ -44,6 +60,9 @@ class BrandController extends Controller
 
     public function destroy(Brand $brand): RedirectResponse
     {
+        if ($brand->logo) {
+            Storage::disk('public')->delete($brand->logo);
+        }
         $brand->delete();
 
         return to_route('admin.brands.index')

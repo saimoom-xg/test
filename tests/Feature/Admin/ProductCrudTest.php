@@ -15,13 +15,16 @@ test('admin dashboard requires authentication', function () {
     $this->get(route('admin.dashboard'))->assertRedirect(route('login'));
 });
 
-test('products index lists products', function () {
+test('products index lists products with images relation', function () {
     Product::factory()->count(3)->create();
 
     $this->actingAs($this->user)
         ->get(route('admin.products.index'))
         ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('admin/products/index'));
+        ->assertInertia(fn ($page) => $page
+            ->component('admin/products/index')
+            ->has('products.data.0.images')
+        );
 });
 
 test('product create page shows form', function () {
