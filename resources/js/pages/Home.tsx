@@ -128,7 +128,7 @@ export default function Home() {
                 <CategoryBadgeList categories={categories || []} />
 
                 {/* 4-Column Responsive Grid with Integrated Promotional Blocks */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 items-stretch">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6 pt-4 items-stretch">
                     {/* 1. Featured Card First (Two-Card-Wide Promotional Content Block) */}
                     <PromotionalContentGridBlock products={featuredProducts} offers={promoOffers} />
 
