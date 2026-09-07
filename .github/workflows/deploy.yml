@@ -11,27 +11,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      # 1. Get the code from GitHub
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
+      # 2. Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, bcmath, pdo, pdo_mysql
+          tools: composer
+
+      # 3. Install Laravel dependencies
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      # 4. Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      # 3. Install frontend dependencies
-      - name: Install dependencies
+      # 5. Install JS dependencies
+      - name: Install npm dependencies
         run: npm ci
 
-      # 4. Build React/Vite frontend
+      # 6. Build frontend
       - name: Build frontend
         run: npm run build
 
-      # 5. Upload everything to cPanel
+      # 7. Deploy to cPanel
       - name: Deploy files to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -40,7 +51,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           port: 21
-          server-dir: /
+          server-dir: choco/
           exclude: |
             **/.git*
             **/.git*/**
