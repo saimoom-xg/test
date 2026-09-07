@@ -17,7 +17,7 @@ return [
 
     'ssr' => [
         'enabled' => true,
-        'url' => 'http://127.0.0.1:13714',
+        'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/'),
         // 'bundle' => base_path('bootstrap/ssr/ssr.mjs'),
 
     ],

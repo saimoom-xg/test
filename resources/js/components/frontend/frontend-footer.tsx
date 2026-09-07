@@ -61,18 +61,18 @@ export default function FrontendFooter() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/cart" className="hover:text-black transition-colors flex items-center gap-1.5">
-                                    <ChevronRight className="w-3 h-3 text-gray-400" /> Shopping Cart
+                                <Link href="/about" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                    <ChevronRight className="w-3 h-3 text-gray-400" /> About Us
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/dashboard" className="hover:text-black transition-colors flex items-center gap-1.5">
-                                    <ChevronRight className="w-3 h-3 text-gray-400" /> Account Dashboard
+                                <Link href="/contact" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                    <ChevronRight className="w-3 h-3 text-gray-400" /> Contact
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/settings/profile" className="hover:text-black transition-colors flex items-center gap-1.5">
-                                    <ChevronRight className="w-3 h-3 text-gray-400" /> Profile & Settings
+                                <Link href="/shipping-returns" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                    <ChevronRight className="w-3 h-3 text-gray-400" /> Shipping & Returns
                                 </Link>
                             </li>
                         </ul>
@@ -131,9 +131,9 @@ export default function FrontendFooter() {
                 <div className="border-t border-gray-200/60 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-medium text-gray-400">
                     <p>&copy; {new Date().getFullYear()} StoreHub. All rights reserved.</p>
                     <div className="flex gap-6">
-                        <a href="#" className="hover:text-gray-600 transition-colors">Privacy Policy</a>
-                        <a href="#" className="hover:text-gray-600 transition-colors">Terms of Service</a>
-                        <a href="#" className="hover:text-gray-600 transition-colors">Cookies</a>
+                        <Link href="/privacy-policy" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
+                        <Link href="/terms-conditions" className="hover:text-gray-600 transition-colors">Terms of Service</Link>
+                        <Link href="/shipping-returns" className="hover:text-gray-600 transition-colors">Shipping & Returns</Link>
                     </div>
                 </div>
             </div>

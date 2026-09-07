@@ -4,7 +4,9 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\Web\CartController;
 use App\Http\Controllers\Web\CheckoutController;
+use App\Http\Controllers\Web\ContactController;
 use App\Http\Controllers\Web\LandingPageController;
+use App\Http\Controllers\Web\PageController;
 use App\Http\Controllers\Web\ProductDetailController;
 use App\Http\Controllers\Web\ShopController;
 use Illuminate\Http\Request;
@@ -15,6 +17,13 @@ Route::get('/', LandingPageController::class)->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/products/{slug}', ProductDetailController::class)->name('products.show');
 Route::get('/wishlist', fn () => redirect()->route('user.wishlist'))->name('wishlist');
+
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/terms-conditions', [PageController::class, 'termsConditions'])->name('terms-conditions');
+Route::get('/shipping-returns', [PageController::class, 'shippingReturns'])->name('shipping-returns');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/items', [CartController::class, 'store'])->name('cart.items.store');

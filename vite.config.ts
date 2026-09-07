@@ -29,6 +29,8 @@ export default defineConfig({
         }),
     ]),
     server: {
+        host: '0.0.0.0',
+        origin: 'https://choco.devspectrum.org',
         watch: {
             ignored: [
                 '**/.agents/**',

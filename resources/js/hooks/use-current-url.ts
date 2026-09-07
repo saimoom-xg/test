@@ -32,7 +32,9 @@ export function useCurrentUrl(): UseCurrentUrlReturn {
         page.url,
         typeof window !== 'undefined'
             ? window.location.origin
-            : 'http://localhost',
+            : (typeof process !== 'undefined' && process.env.VITE_APP_URL)
+              ? process.env.VITE_APP_URL
+              : 'http://localhost',
     ).pathname;
 
     const isCurrentUrl: IsCurrentUrlFn = (

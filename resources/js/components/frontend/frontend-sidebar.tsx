@@ -1,5 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { FaArrowRightFromBracket, FaBagShopping, FaBell, FaCartShopping, FaFolder, FaGauge, FaGear, FaHeart, FaHouse, FaRightToBracket } from 'react-icons/fa6';
+import { FaArrowRightFromBracket, FaBagShopping, FaBell, FaCartShopping, FaFolder, FaGauge, FaGear, FaHeart, FaHouse, FaRightToBracket, FaCircleInfo, FaEnvelope } from 'react-icons/fa6';
 import { dashboard, login } from '@/routes';
 
 export default function FrontendSidebar() {
@@ -95,6 +95,24 @@ export default function FrontendSidebar() {
                             <span className="absolute top-[9px] right-[10px] w-1.5 h-1.5 bg-red-500 rounded-full" />
                         </button>
 
+                        {/* About */}
+                        <Link
+                            href="/about"
+                            title="About Us"
+                            className="w-[42px] h-[42px] rounded-full flex items-center justify-center text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50 transition-colors"
+                        >
+                            <FaCircleInfo className="text-[16px]" />
+                        </Link>
+
+                        {/* Contact */}
+                        <Link
+                            href="/contact"
+                            title="Contact"
+                            className="w-[42px] h-[42px] rounded-full flex items-center justify-center text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50 transition-colors"
+                        >
+                            <FaEnvelope className="text-[16px]" />
+                        </Link>
+
                     </nav>
                 </div>
 
@@ -134,70 +152,90 @@ export default function FrontendSidebar() {
                 </div>
             </aside>
 
-            {/* Mobile Bottom Navigation Bar */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-200/80 px-4 py-2.5 flex justify-around items-center shadow-lg">
-                <Link
-                    href="/"
-                    className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                        isHome ? 'text-[#2a2b30]' : 'text-gray-400'
-                    }`}
-                >
-                    <FaHouse className="text-[18px]" />
-                    <span>Home</span>
-                </Link>
-
-                <Link
-                    href="/shop"
-                    className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                        isShop ? 'text-[#2a2b30]' : 'text-gray-400'
-                    }`}
-                >
-                    <FaFolder className="text-[18px]" />
-                    <span>Shop</span>
-                </Link>
-
-                {user && (
+                {/* Mobile Bottom Navigation Bar */}
+                <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-200/80 px-4 py-2.5 flex justify-around items-center shadow-lg">
                     <Link
-                        href="/user/wishlist"
+                        href="/"
+                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
+                            isHome ? 'text-[#2a2b30]' : 'text-gray-400'
+                        }`}
+                    >
+                        <FaHouse className="text-[18px]" />
+                        <span>Home</span>
+                    </Link>
+
+                    <Link
+                        href="/shop"
+                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
+                            isShop ? 'text-[#2a2b30]' : 'text-gray-400'
+                        }`}
+                    >
+                        <FaFolder className="text-[18px]" />
+                        <span>Shop</span>
+                    </Link>
+
+                    <Link
+                        href="/about"
+                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
+                            isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
+                        }`}
+                    >
+                        <FaCircleInfo className="text-[18px]" />
+                        <span>About</span>
+                    </Link>
+
+                    <Link
+                        href="/contact"
+                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
+                            isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
+                        }`}
+                    >
+                        <FaEnvelope className="text-[18px]" />
+                        <span>Contact</span>
+                    </Link>
+
+                    {user && (
+                        <Link
+                            href="/user/wishlist"
+                            className={`flex flex-col items-center gap-1 text-xs font-semibold relative ${
+                                isWishlist ? 'text-[#2a2b30]' : 'text-gray-400'
+                            }`}
+                        >
+                            <div className="relative">
+                                <FaHeart className="text-[18px]" />
+                                {wishlistCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+                                )}
+                            </div>
+                            <span>Wishlist</span>
+                        </Link>
+                    )}
+
+                    <Link
+                        href="/cart"
                         className={`flex flex-col items-center gap-1 text-xs font-semibold relative ${
-                            isWishlist ? 'text-[#2a2b30]' : 'text-gray-400'
+                            isCart ? 'text-[#2a2b30]' : 'text-gray-400'
                         }`}
                     >
                         <div className="relative">
-                            <FaHeart className="text-[18px]" />
-                            {wishlistCount > 0 && (
+                            <FaCartShopping className="text-[18px]" />
+                            {cartCount > 0 && (
                                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
                             )}
                         </div>
-                        <span>Wishlist</span>
+                        <span>Cart</span>
                     </Link>
-                )}
 
-                <Link
-                    href="/cart"
-                    className={`flex flex-col items-center gap-1 text-xs font-semibold relative ${
-                        isCart ? 'text-[#2a2b30]' : 'text-gray-400'
-                    }`}
-                >
-                    <div className="relative">
-                        <FaCartShopping className="text-[18px]" />
-                        {cartCount > 0 && (
-                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                        )}
-                    </div>
-                    <span>Cart</span>
-                </Link>
-
-                <Link
-                    href={user ? dashboard() : login()}
-                    className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                        isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
-                    }`}
-                >
-                    <FaGauge className="text-[18px]" />
-                    <span>Dashboard</span>
-                </Link>
-            </div>
+                    <Link
+                        href={user ? dashboard() : login()}
+                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
+                            isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
+                        }`}
+                    >
+                        <FaGauge className="text-[18px]" />
+                        <span>Account</span>
+                    </Link>
+                </div>
         </>
     );
 }
