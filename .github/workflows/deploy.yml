@@ -25,24 +25,42 @@ jobs:
 
       # 3. Install Laravel dependencies
       - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: |
+          composer install \
+            --no-interaction \
+            --prefer-dist \
+            --optimize-autoloader
 
-      # 4. Setup Node
+      # 4. Verify Laravel dependencies
+      - name: Verify Laravel vendor
+        run: |
+          if [ ! -f "vendor/autoload.php" ]; then
+            echo "ERROR: vendor/autoload.php was not created."
+            exit 1
+          fi
+
+          echo "vendor/autoload.php exists."
+
+      # 5. Verify Artisan
+      - name: Verify Laravel Artisan
+        run: php artisan --version
+
+      # 6. Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      # 5. Install JS dependencies
+      # 7. Install JavaScript dependencies
       - name: Install npm dependencies
         run: npm ci
 
-      # 6. Build frontend
+      # 8. Build frontend
       - name: Build frontend
         run: npm run build
 
-      # 7. Deploy to cPanel
+      # 9. Deploy to cPanel
       - name: Deploy files to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
