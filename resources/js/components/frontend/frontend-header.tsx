@@ -120,7 +120,7 @@ export default function FrontendHeader({
 
                 {/* Sign In / Dashboard Button */}
                 <Link
-                    href={user ? dashboard() : login()}
+                    href={user ? '/dashboard' : '/login'}
                     className="bg-[#2a2b30] text-white px-7 py-3 rounded-[20px] font-bold text-[13px] hover:bg-black transition-colors shadow-sm capitalize inline-flex items-center justify-center shrink-0"
                 >
                     {user ? `${user.role || 'User'} Panel` : 'Sign in'}

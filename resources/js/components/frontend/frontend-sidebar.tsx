@@ -156,7 +156,7 @@ export default function FrontendSidebar() {
                         </>
                     ) : (
                         <Link
-                            href={login()}
+                            href="/login"
                             title="Sign in"
                             className="w-[42px] h-[42px] rounded-full text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50 flex items-center justify-center transition-colors"
                         >
@@ -243,7 +243,7 @@ export default function FrontendSidebar() {
                     </Link>
 
                     <Link
-                        href={user ? dashboard() : login()}
+                        href={user ? '/dashboard' : '/login'}
                         className={`flex flex-col items-center gap-1 text-xs font-semibold ${
                             isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
                         }`}
