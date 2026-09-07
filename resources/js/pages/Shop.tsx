@@ -678,7 +678,7 @@ export default function Shop({
                         {products.data.length > 0 ? (
                             <>
                                 {/* Product Cards Grid */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6">
                                     {products.data.map((product) => {
                                         const isAdding = addingId === product.id;
                                         const mainImage = getProductImage(product);
