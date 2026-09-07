@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { CalendarDays } from 'lucide-react';
 
 const sections: Array<{ id: string; title: string; children: string }> = [
@@ -75,7 +75,6 @@ export default function TermsConditions() {
         <>
                 <Head title="Terms & Conditions - Chocolate Store">
                     <meta
-                        headKey="terms-description"
                         name="description"
                         content="Review the terms and conditions for using Chocolate Store, covering accounts, payments, orders, returns, intellectual property and liability."
                     />
@@ -132,7 +131,7 @@ export default function TermsConditions() {
                                 >
                                     legal@chocolatstore.com
                                 </a>{' '}
-                                or visit our <a href="/contact" className="underline hover:text-[#2a2b30] transition-colors">Contact</a> page.
+                                or visit our <Link href="/contact" className="underline hover:text-[#2a2b30] transition-colors">Contact</Link> page.
                             </p>
                         </section>
                     </div>

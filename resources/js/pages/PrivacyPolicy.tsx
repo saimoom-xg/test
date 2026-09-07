@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { CalendarDays } from 'lucide-react';
 
 const sections: Array<{ id: string; title: string; children: string }> = [
@@ -59,7 +59,6 @@ export default function PrivacyPolicy() {
         <>
             <Head title="Privacy Policy - Chocolate Store">
                 <meta
-                    headKey="privacy-description"
                     name="description"
                     content="Read our Privacy Policy to understand what data we collect, how we use cookies, share information, and protect your personal details."
                 />
@@ -186,7 +185,7 @@ export default function PrivacyPolicy() {
                             >
                                 privacy@chocolatstore.com
                             </a>{' '}
-                            or visit our <a href="/contact" className="underline hover:text-[#2a2b30] transition-colors">Contact</a> page.
+                            or visit our <Link href="/contact" className="underline hover:text-[#2a2b30] transition-colors">Contact</Link> page.
                         </p>
                     </section>
                 </div>

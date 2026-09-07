@@ -21,8 +21,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         Fortify::ignoreRoutes();
-        URL::forceRootUrl(config('app.url'));
-        URL::forceScheme('https');
+
+        if (app()->isProduction() || str_starts_with((string) config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
     }
 
     protected function configureDefaults(): void

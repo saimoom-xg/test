@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import {
     ArrowRight,
     Award,
@@ -92,7 +92,6 @@ export default function About() {
         <>
             <Head title="Our Story - Premium Chocolate Store">
                 <meta
-                    headKey="about-description"
                     name="description"
                     content="Discover our story — 27 years of handcrafted, single-origin chocolate. Meet the values, people and rituals behind every bar and praline."
                 />
@@ -117,13 +116,13 @@ export default function About() {
                             cocoa bean in every bite.
                         </p>
                         <div className="mt-7 flex flex-wrap items-center gap-3">
-                            <a
+                            <Link
                                 href="/shop"
                                 className="inline-flex items-center gap-2 bg-[#2a2b30] text-white px-7 py-3.5 rounded-[16px] font-bold text-[13px] hover:bg-black transition-all shadow-sm active:scale-[0.98]"
                             >
                                 Explore the Collection
                                 <ArrowRight className="w-4 h-4" />
-                            </a>
+                            </Link>
                             <a
                                 href="#values"
                                 className="inline-flex items-center gap-2 bg-white text-[#2a2b30] px-7 py-3.5 rounded-[16px] font-bold text-[13px] border border-black/5 hover:bg-[#f8f6f2] transition-all shadow-sm active:scale-[0.98]"
@@ -251,13 +250,13 @@ export default function About() {
                         <p className="mt-3 text-[13.5px] font-medium text-white/70 leading-relaxed">
                             Browse our single-origin bars, praline boxes and seasonal releases.
                         </p>
-                        <a
+                        <Link
                             href="/shop"
                             className="mt-6 inline-flex items-center gap-2 bg-[#facc15] text-[#2a2b30] px-8 py-4 rounded-[16px] font-bold text-[13.5px] hover:brightness-95 transition-all shadow-sm active:scale-[0.98]"
                         >
                             Shop the Collection
                             <ArrowRight className="w-4 h-4" />
-                        </a>
+                        </Link>
                     </div>
                 </section>
             </div>

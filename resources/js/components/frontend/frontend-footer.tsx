@@ -51,27 +51,27 @@ export default function FrontendFooter() {
                         <h4 className="font-bold text-sm tracking-wide uppercase text-[#2a2b30] mb-4">Quick Links</h4>
                         <ul className="space-y-2.5 text-[13.5px] font-medium text-gray-500">
                             <li>
-                                <Link href="/" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Home
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shop" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/shop" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Shop Catalog
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/about" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/about" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> About Us
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/contact" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/contact" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Contact
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shipping-returns" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/shipping-returns" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Shipping & Returns
                                 </Link>
                             </li>
@@ -83,24 +83,24 @@ export default function FrontendFooter() {
                         <h4 className="font-bold text-sm tracking-wide uppercase text-[#2a2b30] mb-4">Customer Care</h4>
                         <ul className="space-y-2.5 text-[13.5px] font-medium text-gray-500">
                             <li>
-                                <a href="#" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/contact" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Help Center
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/shipping-returns" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Returns & Refunds
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/shipping-returns" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Shipping & Delivery
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-black transition-colors flex items-center gap-1.5">
+                                <Link href="/contact" prefetch className="hover:text-black transition-colors flex items-center gap-1.5">
                                     <ChevronRight className="w-3 h-3 text-gray-400" /> Order Tracking
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>
@@ -131,9 +131,9 @@ export default function FrontendFooter() {
                 <div className="border-t border-gray-200/60 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-medium text-gray-400">
                     <p>&copy; {new Date().getFullYear()} StoreHub. All rights reserved.</p>
                     <div className="flex gap-6">
-                        <Link href="/privacy-policy" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
-                        <Link href="/terms-conditions" className="hover:text-gray-600 transition-colors">Terms of Service</Link>
-                        <Link href="/shipping-returns" className="hover:text-gray-600 transition-colors">Shipping & Returns</Link>
+                        <Link href="/privacy-policy" prefetch className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
+                        <Link href="/terms-conditions" prefetch className="hover:text-gray-600 transition-colors">Terms of Service</Link>
+                        <Link href="/shipping-returns" prefetch className="hover:text-gray-600 transition-colors">Shipping & Returns</Link>
                     </div>
                 </div>
             </div>

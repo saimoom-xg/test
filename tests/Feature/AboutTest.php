@@ -1,7 +1,10 @@
 <?php
 
-test('example', function () {
-    $response = $this->get('/');
+use Inertia\Testing\AssertableInertia as Assert;
 
-    $response->assertStatus(200);
+test('about page can be rendered via inertia', function () {
+    $response = $this->get(route('about'));
+
+    $response->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->component('About'));
 });

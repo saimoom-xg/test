@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { type FormEvent } from 'react';
 import {
     ArrowRight,
@@ -79,7 +79,6 @@ export default function Contact() {
         <>
             <Head title="Contact Us - Premium Chocolate Store">
                 <meta
-                    headKey="contact-description"
                     name="description"
                     content="Get in touch with our chocolate care team. Visit the atelier, call, email or send us a message — we reply within 24 hours."
                 />
@@ -224,7 +223,7 @@ export default function Contact() {
                             <div className="sm:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
                                 <p className="text-[11.5px] font-medium text-[#a8a7a2] leading-relaxed">
                                     By sending, you agree to our{' '}
-                                    <a href="/privacy-policy" className="underline hover:text-[#2a2b30] transition-colors">Privacy Policy</a>.
+                                    <Link href="/privacy-policy" className="underline hover:text-[#2a2b30] transition-colors">Privacy Policy</Link>.
                                 </p>
                                 <button
                                     type="submit"
@@ -260,13 +259,13 @@ export default function Contact() {
                                     Browse shipping times, returns and FAQs — most answers live there.
                                 </p>
                             </div>
-                            <a
+                            <Link
                                 href="/shipping-returns"
                                 className="mt-6 inline-flex items-center justify-center gap-2 bg-[#facc15] text-[#2a2b30] px-5 py-3 rounded-[14px] font-bold text-[12.5px] hover:brightness-95 transition-all active:scale-[0.98]"
                             >
                                 Shipping &amp; Returns
                                 <ArrowRight className="w-4 h-4" />
-                            </a>
+                            </Link>
                         </div>
 
                         <div className="bg-white rounded-[24px] border border-black/5 shadow-sm p-7">

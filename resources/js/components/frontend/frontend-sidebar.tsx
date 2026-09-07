@@ -11,6 +11,8 @@ export default function FrontendSidebar() {
 
     const isHome = url === '/' || url === '';
     const isShop = url.startsWith('/shop');
+    const isAbout = url.startsWith('/about');
+    const isContact = url.startsWith('/contact');
     const isWishlist = url.startsWith('/user/wishlist');
     const isCart = url.startsWith('/cart');
     const isDashboard = (url.startsWith('/dashboard') || url.startsWith('/user') || url.startsWith('/admin')) && !isWishlist;
@@ -41,6 +43,7 @@ export default function FrontendSidebar() {
                         {/* Home */}
                         <Link
                             href="/"
+                            prefetch
                             title="Home"
                             className={`w-[42px] h-[42px] rounded-full flex items-center justify-center transition-all ${
                                 isHome
@@ -54,6 +57,7 @@ export default function FrontendSidebar() {
                         {/* Products / Catalog */}
                         <Link
                             href="/shop"
+                            prefetch
                             title="Shop Catalog"
                             className={`w-[42px] h-[42px] rounded-full flex items-center justify-center transition-all ${
                                 isShop
@@ -98,8 +102,13 @@ export default function FrontendSidebar() {
                         {/* About */}
                         <Link
                             href="/about"
+                            prefetch
                             title="About Us"
-                            className="w-[42px] h-[42px] rounded-full flex items-center justify-center text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50 transition-colors"
+                            className={`w-[42px] h-[42px] rounded-full flex items-center justify-center transition-all ${
+                                isAbout
+                                    ? 'bg-[#2a2b30] text-[#facc15] shadow-xs'
+                                    : 'text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50'
+                            }`}
                         >
                             <FaCircleInfo className="text-[16px]" />
                         </Link>
@@ -107,8 +116,13 @@ export default function FrontendSidebar() {
                         {/* Contact */}
                         <Link
                             href="/contact"
+                            prefetch
                             title="Contact"
-                            className="w-[42px] h-[42px] rounded-full flex items-center justify-center text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50 transition-colors"
+                            className={`w-[42px] h-[42px] rounded-full flex items-center justify-center transition-all ${
+                                isContact
+                                    ? 'bg-[#2a2b30] text-[#facc15] shadow-xs'
+                                    : 'text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50'
+                            }`}
                         >
                             <FaEnvelope className="text-[16px]" />
                         </Link>
@@ -176,8 +190,9 @@ export default function FrontendSidebar() {
 
                     <Link
                         href="/about"
+                        prefetch
                         className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                            isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
+                            isAbout ? 'text-[#2a2b30]' : 'text-gray-400'
                         }`}
                     >
                         <FaCircleInfo className="text-[18px]" />
@@ -186,8 +201,9 @@ export default function FrontendSidebar() {
 
                     <Link
                         href="/contact"
+                        prefetch
                         className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                            isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
+                            isContact ? 'text-[#2a2b30]' : 'text-gray-400'
                         }`}
                     >
                         <FaEnvelope className="text-[18px]" />

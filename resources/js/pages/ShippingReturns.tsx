@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { type ComponentType, useState } from 'react';
 import { ChevronDown, Clock, MapPin, PackageCheck, CalendarDays, Sparkles } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -121,7 +121,6 @@ export default function ShippingReturns() {
         <>
             <Head title="Shipping & Returns - Chocolate Store">
                 <meta
-                    headKey="shipping-description"
                     name="description"
                     content="Discover our worldwide shipping options, delivery times, and returns policy. Free returns within 30 days on all unopened chocolate orders."
                 />
@@ -268,12 +267,12 @@ export default function ShippingReturns() {
                         <p className="mt-3 text-[13.5px] font-medium text-white/70 leading-relaxed">
                             Our chocolate care team is standing by to help with your order, delivery, or return query.
                         </p>
-                        <a
+                        <Link
                             href="/contact"
                             className="mt-6 inline-flex items-center gap-2 bg-[#facc15] text-[#2a2b30] px-8 py-4 rounded-[16px] font-bold text-[13.5px] hover:brightness-95 transition-all shadow-sm active:scale-[0.98]"
                         >
                             Contact Us
-                        </a>
+                        </Link>
                     </div>
                 </section>
             </div>
