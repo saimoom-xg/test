@@ -7,12 +7,12 @@ on:
 
 jobs:
   deploy:
-    name: Build and Deploy
+    name: Build & Deploy
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
-      - name: Checkout code
+      # 1. Checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
       # 2. Setup PHP
@@ -22,46 +22,36 @@ jobs:
           php-version: '8.4'
           extensions: mbstring, bcmath, pdo, pdo_mysql
           tools: composer
+          coverage: none
 
-      # 3. Install Laravel dependencies
+      # 3. Composer is needed ONLY on GitHub
+      # Required by Laravel/Wayfinder during the frontend build
       - name: Install Composer dependencies
         run: |
           composer install \
             --no-interaction \
             --prefer-dist \
-            --optimize-autoloader
+            --no-dev \
+            --optimize-autoloader \
+            --no-progress
 
-      # 4. Verify Laravel dependencies
-      - name: Verify Laravel vendor
-        run: |
-          if [ ! -f "vendor/autoload.php" ]; then
-            echo "ERROR: vendor/autoload.php was not created."
-            exit 1
-          fi
-
-          echo "vendor/autoload.php exists."
-
-      # 5. Verify Artisan
-      - name: Verify Laravel Artisan
-        run: php artisan --version
-
-      # 6. Setup Node.js
+      # 4. Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      # 7. Install JavaScript dependencies
+      # 5. Install frontend dependencies
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit --no-fund
 
-      # 8. Build frontend
+      # 6. Build frontend EVERY push
       - name: Build frontend
         run: npm run build
 
-      # 9. Deploy to cPanel
-      - name: Deploy files to cPanel
+      # 7. Upload only changed files
+      - name: Deploy to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -69,10 +59,16 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           port: 21
+
+          # /home/doxqkwec/choco/
           server-dir: /
+
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/vendor/**
             **/.env
             **/storage/logs/**
+            **/tests/**
+            **/.github/**
