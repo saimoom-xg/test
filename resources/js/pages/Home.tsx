@@ -121,6 +121,7 @@ export default function Home() {
             : []),
     ] : undefined;
 
+    // product return JSX
     return (
         <>
             <Head title="Store - Curated Products & Special Offers" />
