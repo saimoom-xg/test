@@ -17,7 +17,7 @@ type FrontendHeaderProps = {
 };
 
 export default function FrontendHeader({
-    title = 'Chocolate Box',
+    title = 'Chocolate Store',
     subtitle = "Let's take a look at your activity today",
     showSearch = true,
 }: FrontendHeaderProps) {
