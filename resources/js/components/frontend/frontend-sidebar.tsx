@@ -1,6 +1,7 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { FaArrowRightFromBracket, FaBagShopping, FaBell, FaCartShopping, FaFolder, FaGauge, FaGear, FaHeart, FaHouse, FaRightToBracket, FaCircleInfo, FaEnvelope } from 'react-icons/fa6';
+import { FaArrowRightFromBracket, FaBagShopping, FaBell, FaCartShopping, FaHeart, FaHouse, FaRightToBracket, FaCircleInfo, FaEnvelope, FaXmark } from 'react-icons/fa6';
 import { dashboard, login } from '@/routes';
+import { useState, useEffect } from 'react';
 
 export default function FrontendSidebar() {
     const { url } = usePage();
@@ -8,6 +9,7 @@ export default function FrontendSidebar() {
     const user = auth?.user;
     const cartCount = cart?.count ?? cart?.item_count ?? 0;
     const wishlistCount = wishlist?.count ?? (Array.isArray(wishlist?.productIds) ? wishlist.productIds.length : 0);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const isHome = url === '/' || url === '';
     const isShop = url.startsWith('/shop');
@@ -22,10 +24,36 @@ export default function FrontendSidebar() {
         router.post('/logout');
     };
 
+    useEffect(() => {
+        const handleToggle = () => setMobileMenuOpen((prev) => !prev);
+        window.addEventListener('toggle-mobile-menu', handleToggle);
+        return () => window.removeEventListener('toggle-mobile-menu', handleToggle);
+    }, []);
+
+    useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [url]);
+
+    const bottomNavItems = [
+        { href: '/', icon: FaHouse, label: 'Home', active: isHome, show: true },
+        { href: '/shop', icon: FaBagShopping, label: 'Shop', active: isShop, show: true },
+        { href: '/cart', icon: FaCartShopping, label: 'Cart', active: isCart, show: true, badge: cartCount },
+        { href: '/contact', icon: FaEnvelope, label: 'Contact', active: isContact, show: true },
+        { href: user ? '/dashboard' : '/login', icon: FaRightToBracket, label: user ? 'Account' : 'Sign In', active: isDashboard, show: true },
+    ];
+
     return (
         <>
+            {/* Mobile Overlay */}
+            {mobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
+                    onClick={() => setMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Desktop Left Floating Sidebar */}
-            <aside className="hidden md:flex w-[64px] flex-col justify-between fixed top-6 bottom-4 left-4 z-50">
+            <aside className={`hidden md:flex w-[64px] flex-col justify-between fixed top-6 bottom-4 left-4 z-50 transition-transform duration-300 ${mobileMenuOpen ? '-translate-x-full md:translate-x-0' : 'translate-x-0'}`}>
                 {/* Top Section: Logo + Main Nav */}
                 <div className="flex flex-col gap-3 min-h-0">
                     {/* Logo Area */}
@@ -166,92 +194,84 @@ export default function FrontendSidebar() {
                 </div>
             </aside>
 
-                {/* Mobile Bottom Navigation Bar */}
-                <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-200/80 px-4 py-2.5 flex justify-around items-center shadow-lg">
-                    <Link
-                        href="/"
-                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                            isHome ? 'text-[#2a2b30]' : 'text-gray-400'
-                        }`}
-                    >
-                        <FaHouse className="text-[18px]" />
-                        <span>Home</span>
-                    </Link>
+            {/* Mobile Slide-out Sidebar */}
+            <div className={`fixed inset-y-0 left-0 w-[280px] bg-white z-[60] transform transition-transform duration-300 md:hidden ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="flex flex-col h-full">
+                    <div className="flex items-center justify-between p-4 border-b border-black/5">
+                        <Link href="/" className="flex items-center gap-2">
+                            <div className="grid grid-cols-2 gap-[3px]">
+                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                            </div>
+                            <span className="text-xl font-bold tracking-tight text-black">Store</span>
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                        >
+                            <FaXmark className="text-[18px] text-gray-600" />
+                        </button>
+                    </div>
+                    <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+                        {bottomNavItems.filter(item => item.show).map((item) => (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-colors ${
+                                    item.active
+                                        ? 'bg-[#2a2b30] text-white'
+                                        : 'text-gray-600 hover:bg-gray-50 hover:text-[#2a2b30]'
+                                }`}
+                            >
+                                <item.icon className="text-[18px]" />
+                                <span>{item.label}</span>
+                            </Link>
+                        ))}
+                        {user && (
+                            <button
+                                type="button"
+                                onClick={handleLogout}
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                                <FaArrowRightFromBracket className="text-[18px]" />
+                                <span>Sign out</span>
+                            </button>
+                        )}
+                    </nav>
+                </div>
+            </div>
 
-                    <Link
-                        href="/shop"
-                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                            isShop ? 'text-[#2a2b30]' : 'text-gray-400'
-                        }`}
-                    >
-                        <FaFolder className="text-[18px]" />
-                        <span>Shop</span>
-                    </Link>
-
-                    <Link
-                        href="/about"
-                        prefetch
-                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                            isAbout ? 'text-[#2a2b30]' : 'text-gray-400'
-                        }`}
-                    >
-                        <FaCircleInfo className="text-[18px]" />
-                        <span>About</span>
-                    </Link>
-
-                    <Link
-                        href="/contact"
-                        prefetch
-                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                            isContact ? 'text-[#2a2b30]' : 'text-gray-400'
-                        }`}
-                    >
-                        <FaEnvelope className="text-[18px]" />
-                        <span>Contact</span>
-                    </Link>
-
-                    {user && (
+            {/* Mobile Bottom Navigation Bar */}
+            <nav className="md:hidden fixed bottom-4 left-4 right-4 z-50 flex justify-center" aria-label="Mobile navigation">
+                <div className="flex items-center gap-1 sm:gap-2 bg-[#2a2b30] rounded-full px-2 py-2 sm:px-4 sm:py-2.5 shadow-[0_-4px_20px_rgba(0,0,0,0.35)] border border-white/10 w-full max-w-lg">
+                    {bottomNavItems.map((item) => (
                         <Link
-                            href="/user/wishlist"
-                            className={`flex flex-col items-center gap-1 text-xs font-semibold relative ${
-                                isWishlist ? 'text-[#2a2b30]' : 'text-gray-400'
+                            key={item.href}
+                            href={item.href}
+                            className={`relative flex flex-col items-center justify-center gap-1 flex-1 min-w-0 py-1 transition-colors ${
+                                item.active ? 'text-white' : 'text-gray-400'
                             }`}
+                            aria-label={item.label}
                         >
                             <div className="relative">
-                                <FaHeart className="text-[18px]" />
-                                {wishlistCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+                                <div className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
+                                    item.active ? 'bg-[#facc15] text-[#2a2b30]' : 'bg-transparent text-gray-400'
+                                }`}>
+                                    <item.icon className="text-[20px]" />
+                                </div>
+                                {item.badge !== undefined && item.badge > 0 && (
+                                    <span className="absolute -top-1 -right-2 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-[#2a2b30]">
+                                        {item.badge > 99 ? '99+' : item.badge}
+                                    </span>
                                 )}
                             </div>
-                            <span>Wishlist</span>
                         </Link>
-                    )}
-
-                    <Link
-                        href="/cart"
-                        className={`flex flex-col items-center gap-1 text-xs font-semibold relative ${
-                            isCart ? 'text-[#2a2b30]' : 'text-gray-400'
-                        }`}
-                    >
-                        <div className="relative">
-                            <FaCartShopping className="text-[18px]" />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                            )}
-                        </div>
-                        <span>Cart</span>
-                    </Link>
-
-                    <Link
-                        href={user ? '/dashboard' : '/login'}
-                        className={`flex flex-col items-center gap-1 text-xs font-semibold ${
-                            isDashboard ? 'text-[#2a2b30]' : 'text-gray-400'
-                        }`}
-                    >
-                        <FaGauge className="text-[18px]" />
-                        <span>Account</span>
-                    </Link>
+                    ))}
                 </div>
+            </nav>
         </>
     );
 }

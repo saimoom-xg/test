@@ -128,7 +128,7 @@ export default function Checkout({
         <>
             <Head title="Express Checkout" />
 
-            <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
+            <div className="w-full px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
                 {/* Back Link & Header */}
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>

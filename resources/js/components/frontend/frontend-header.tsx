@@ -1,5 +1,6 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import { FiSearch, FiShoppingCart } from 'react-icons/fi';
+import { FaBars, FaMagnifyingGlass, FaShoppingCart } from 'react-icons/fa6';
 import { Check, ChevronDown } from 'lucide-react';
 import { dashboard, login } from '@/routes';
 import { useCurrency } from '@/hooks/use-currency';
@@ -28,16 +29,33 @@ export default function FrontendHeader({
     const headerTitle = title || pageTitle || 'Ecommerce Store';
     const headerSubtitle = subtitle || pageSubtitle;
 
+    const toggleSidebar = () => {
+        window.dispatchEvent(new Event('toggle-mobile-menu'));
+    };
+
     return (
         <header className="w-full min-w-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-            <div>
-                <h1 className="text-[22px] font-bold tracking-tight text-[#2a2b30]">{headerTitle}</h1>
-                {headerSubtitle && (
-                    <p className="text-[#8e8d89] font-medium text-[13px]">{headerSubtitle}</p>
-                )}
+            <div className="flex items-center justify-between w-full md:w-auto gap-3">
+                <div className="min-w-0">
+                    <h1 className="text-[22px] font-bold tracking-tight text-[#2a2b30] truncate">{headerTitle}</h1>
+                    {headerSubtitle && (
+                        <p className="text-[#8e8d89] font-medium text-[13px] truncate">{headerSubtitle}</p>
+                    )}
+                </div>
+
+                <div className="flex items-center gap-2 md:hidden">
+                    <button
+                        type="button"
+                        onClick={toggleSidebar}
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-black/5 text-[#2a2b30] shadow-sm hover:bg-gray-50 transition-colors"
+                        aria-label="Toggle menu"
+                    >
+                        <FaBars className="h-5 w-5" />
+                    </button>
+                </div>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
                 {showSearch && (
                     <form
                         onSubmit={(e) => {
@@ -60,7 +78,6 @@ export default function FrontendHeader({
                     </form>
                 )}
 
-                {/* Currency Selector (Before Cart Button) */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <button
@@ -104,7 +121,6 @@ export default function FrontendHeader({
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Shopping Cart Button */}
                 <Link
                     href="/cart"
                     className="relative flex items-center justify-center w-[46px] h-[46px] bg-white rounded-full shadow-sm border border-black/5 text-[#2a2b30] hover:bg-gray-50 transition-colors shrink-0"
@@ -118,13 +134,36 @@ export default function FrontendHeader({
                     )}
                 </Link>
 
-                {/* Sign In / Dashboard Button */}
                 <Link
                     href={user ? '/dashboard' : '/login'}
                     className="bg-[#2a2b30] text-white px-7 py-3 rounded-[20px] font-bold text-[13px] hover:bg-black transition-colors shadow-sm capitalize inline-flex items-center justify-center shrink-0"
                 >
                     {user ? `${user.role || 'User'} Panel` : 'Sign in'}
                 </Link>
+            </div>
+
+            <div className="md:hidden w-full">
+                {showSearch && (
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const form = e.currentTarget;
+                            const input = form.elements.namedItem('search') as HTMLInputElement;
+                            if (input && input.value.trim()) {
+                                router.get('/shop', { search: input.value.trim() });
+                            }
+                        }}
+                        className="relative bg-white rounded-[20px] shadow-sm border border-black/5 flex items-center px-5 py-3 w-full"
+                    >
+                        <FaMagnifyingGlass className="text-gray-400 text-[18px] mr-3 shrink-0" />
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Search products..."
+                            className="bg-transparent border-none outline-none w-full text-[13.5px] font-medium text-gray-700 placeholder:text-[#a8a7a2]"
+                        />
+                    </form>
+                )}
             </div>
         </header>
     );
