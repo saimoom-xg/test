@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
-import { FaStar } from 'react-icons/fa6';
+import { Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCurrency } from '@/hooks/use-currency';
 
@@ -48,7 +48,7 @@ export default function ProductCardHorizontal({ id, name, price, image, rating =
             <div className="flex-grow">
                 <div className="flex text-brand-yellow text-xs mb-2">
                     {Array.from({ length: 5 }).map((_, i) => (
-                        <FaStar key={i} />
+                        <Star key={i} className="w-3.5 h-3.5 fill-current" />
                     ))}
                 </div>
                 <h4 className="font-bold text-lg text-black mb-1">{name}</h4>

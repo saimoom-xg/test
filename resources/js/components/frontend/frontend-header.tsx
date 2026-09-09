@@ -1,7 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { FiSearch, FiShoppingCart } from 'react-icons/fi';
-import { FaBars, FaMagnifyingGlass, FaShoppingCart } from 'react-icons/fa6';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, Equal, Search, ShoppingCart } from 'lucide-react';
 import { dashboard, login } from '@/routes';
 import { useCurrency } from '@/hooks/use-currency';
 import {
@@ -36,11 +34,20 @@ export default function FrontendHeader({
     return (
         <header className="w-full min-w-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div className="flex items-center justify-between w-full md:w-auto gap-3">
-                <div className="min-w-0">
-                    <h1 className="text-[22px] font-bold tracking-tight text-[#2a2b30] truncate">{headerTitle}</h1>
-                    {headerSubtitle && (
-                        <p className="text-[#8e8d89] font-medium text-[13px] truncate">{headerSubtitle}</p>
-                    )}
+                <div className="flex items-center gap-3 min-w-0">
+                    <Link href="/" className="shrink-0 group cursor-pointer md:hidden" title="Home">
+                        <img
+                            src="https://static.vecteezy.com/system/resources/previews/034/994/756/non_2x/illustration-of-threads-logo-free-png.png"
+                            alt="Logo"
+                            className="w-10 h-10 object-contain transition-transform group-hover:scale-105"
+                        />
+                    </Link>
+                    <div className="min-w-0">
+                        <h1 className="text-[18px] sm:text-[20px] font-bold tracking-tight text-[#2a2b30] truncate">{headerTitle}</h1>
+                        {headerSubtitle && (
+                            <p className="text-[#8e8d89] font-medium text-[11px] sm:text-[12px] truncate">{headerSubtitle}</p>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-2 md:hidden">
@@ -50,7 +57,7 @@ export default function FrontendHeader({
                         className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-black/5 text-[#2a2b30] shadow-sm hover:bg-gray-50 transition-colors"
                         aria-label="Toggle menu"
                     >
-                        <FaBars className="h-5 w-5" />
+                        <Equal className="h-5 w-5" />
                     </button>
                 </div>
             </div>
@@ -68,7 +75,7 @@ export default function FrontendHeader({
                         }}
                         className="relative bg-white rounded-[20px] shadow-sm border border-black/5 flex items-center px-5 py-2.5 w-full sm:w-[260px]"
                     >
-                        <FiSearch className="text-gray-400 text-[17px] mr-2.5 shrink-0" />
+                        <Search className="text-gray-400 w-4 h-4 mr-2.5 shrink-0" />
                         <input
                             type="text"
                             name="search"
@@ -126,7 +133,7 @@ export default function FrontendHeader({
                     className="relative flex items-center justify-center w-[46px] h-[46px] bg-white rounded-full shadow-sm border border-black/5 text-[#2a2b30] hover:bg-gray-50 transition-colors shrink-0"
                     aria-label={`Cart with ${cartCount} items`}
                 >
-                    <FiShoppingCart className="text-[18px]" />
+                    <ShoppingCart className="w-5 h-5" />
                     {cartCount > 0 && (
                         <span className="absolute top-0 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-[18px] min-w-[18px] px-1 flex items-center justify-center shadow-sm border-2 border-white">
                             {cartCount > 99 ? '99+' : cartCount}
@@ -155,7 +162,7 @@ export default function FrontendHeader({
                         }}
                         className="relative bg-white rounded-[20px] shadow-sm border border-black/5 flex items-center px-5 py-3 w-full"
                     >
-                        <FaMagnifyingGlass className="text-gray-400 text-[18px] mr-3 shrink-0" />
+                        <Search className="text-gray-400 w-4 h-4 mr-3 shrink-0" />
                         <input
                             type="text"
                             name="search"

@@ -3,15 +3,18 @@ import { type FormEvent } from 'react';
 import {
     ArrowRight,
     Clock,
+    Facebook,
     Headset,
+    Instagram,
     Loader2,
     Mail,
     MapPin,
     Phone,
     Send,
     Sparkles,
+    Twitter,
+    Youtube,
 } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { toast } from 'sonner';
 import InputError from '@/components/input-error';
 
@@ -46,10 +49,10 @@ const contactChannels = [
 ];
 
 const socials = [
-    { icon: FaFacebookF, label: 'Facebook' },
-    { icon: FaInstagram, label: 'Instagram' },
-    { icon: FaTwitter, label: 'Twitter' },
-    { icon: FaYoutube, label: 'YouTube' },
+    { icon: Facebook, label: 'Facebook' },
+    { icon: Instagram, label: 'Instagram' },
+    { icon: Twitter, label: 'Twitter' },
+    { icon: Youtube, label: 'YouTube' },
 ];
 
 const inputClasses =
@@ -139,7 +142,7 @@ export default function Contact() {
                                 title={social.label}
                                 className="w-10 h-10 bg-[#f8f6f2] border border-black/5 rounded-full flex items-center justify-center text-[#2a2b30] hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all"
                             >
-                                <social.icon className="text-[13px]" />
+                                <social.icon className="w-4 h-4" />
                             </a>
                         ))}
                     </div>

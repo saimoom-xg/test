@@ -1,5 +1,16 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { FaArrowRightFromBracket, FaBagShopping, FaBell, FaCartShopping, FaHeart, FaHouse, FaRightToBracket, FaCircleInfo, FaEnvelope, FaXmark } from 'react-icons/fa6';
+import {
+    Bell,
+    Heart,
+    Home,
+    Info,
+    LogOut,
+    MessageSquare,
+    ShoppingBag,
+    ShoppingCart,
+    User,
+    X,
+} from 'lucide-react';
 import { dashboard, login } from '@/routes';
 import { useState, useEffect } from 'react';
 
@@ -35,11 +46,11 @@ export default function FrontendSidebar() {
     }, [url]);
 
     const bottomNavItems = [
-        { href: '/', icon: FaHouse, label: 'Home', active: isHome, show: true },
-        { href: '/shop', icon: FaBagShopping, label: 'Shop', active: isShop, show: true },
-        { href: '/cart', icon: FaCartShopping, label: 'Cart', active: isCart, show: true, badge: cartCount },
-        { href: '/contact', icon: FaEnvelope, label: 'Contact', active: isContact, show: true },
-        { href: user ? '/dashboard' : '/login', icon: FaRightToBracket, label: user ? 'Account' : 'Sign In', active: isDashboard, show: true },
+        { href: '/', icon: Home, label: 'Home', active: isHome, show: true },
+        { href: '/shop', icon: ShoppingBag, label: 'Shop', active: isShop, show: true },
+        { href: '/cart', icon: ShoppingCart, label: 'Cart', active: isCart, show: true, badge: cartCount },
+        { href: '/contact', icon: MessageSquare, label: 'Contact', active: isContact, show: true },
+        { href: user ? '/dashboard' : '/login', icon: User, label: user ? 'Account' : 'Sign In', active: isDashboard, show: true },
     ];
 
     return (
@@ -79,7 +90,7 @@ export default function FrontendSidebar() {
                                     : 'text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50'
                             }`}
                         >
-                            <FaHouse className="text-[16px]" />
+                            <Home className="w-[18px] h-[18px]" />
                         </Link>
 
                         {/* Products / Catalog */}
@@ -93,7 +104,7 @@ export default function FrontendSidebar() {
                                     : 'text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50'
                             }`}
                         >
-                            <FaBagShopping className="text-[16px]" />
+                            <ShoppingBag className="w-[18px] h-[18px]" />
                         </Link>
 
                         {/* Wishlist (Shown in left bar only when user is logged in) */}
@@ -108,7 +119,7 @@ export default function FrontendSidebar() {
                                 }`}
                             >
                                 <div className="relative">
-                                    <FaHeart className="text-[16px]" />
+                                    <Heart className="w-[18px] h-[18px]" />
                                     {wishlistCount > 0 && (
                                         <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-red-500 rounded-full" aria-hidden="true" />
                                     )}
@@ -123,7 +134,7 @@ export default function FrontendSidebar() {
                             onClick={() => {}}
                             className="w-[42px] h-[42px] rounded-full text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50 flex items-center justify-center transition-colors relative"
                         >
-                            <FaBell className="text-[16px]" />
+                            <Bell className="w-[18px] h-[18px]" />
                             <span className="absolute top-[9px] right-[10px] w-1.5 h-1.5 bg-red-500 rounded-full" />
                         </button>
 
@@ -138,7 +149,7 @@ export default function FrontendSidebar() {
                                     : 'text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50'
                             }`}
                         >
-                            <FaCircleInfo className="text-[16px]" />
+                            <Info className="w-[18px] h-[18px]" />
                         </Link>
 
                         {/* Contact */}
@@ -152,7 +163,7 @@ export default function FrontendSidebar() {
                                     : 'text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50'
                             }`}
                         >
-                            <FaEnvelope className="text-[16px]" />
+                            <MessageSquare className="w-[18px] h-[18px]" />
                         </Link>
 
                     </nav>
@@ -168,7 +179,7 @@ export default function FrontendSidebar() {
                                 title="Sign out"
                                 className="w-[42px] h-[42px] rounded-full text-[#8e8d89] hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors"
                             >
-                                <FaArrowRightFromBracket className="text-[16px]" />
+                                <LogOut className="w-[18px] h-[18px]" />
                             </button>
                             <Link
                                 href="/settings/profile"
@@ -188,7 +199,7 @@ export default function FrontendSidebar() {
                             title="Sign in"
                             className="w-[42px] h-[42px] rounded-full text-[#8e8d89] hover:text-[#2a2b30] hover:bg-gray-50 flex items-center justify-center transition-colors"
                         >
-                            <FaRightToBracket className="text-[16px]" />
+                            <User className="w-[18px] h-[18px]" />
                         </Link>
                     )}
                 </div>
@@ -212,7 +223,7 @@ export default function FrontendSidebar() {
                             onClick={() => setMobileMenuOpen(false)}
                             className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
                         >
-                            <FaXmark className="text-[18px] text-gray-600" />
+                            <X className="w-5 h-5 text-gray-600" />
                         </button>
                     </div>
                     <nav className="flex-1 overflow-y-auto p-4 space-y-1">
@@ -226,7 +237,7 @@ export default function FrontendSidebar() {
                                         : 'text-gray-600 hover:bg-gray-50 hover:text-[#2a2b30]'
                                 }`}
                             >
-                                <item.icon className="text-[18px]" />
+                                <item.icon className="w-5 h-5" />
                                 <span>{item.label}</span>
                             </Link>
                         ))}
@@ -236,7 +247,7 @@ export default function FrontendSidebar() {
                                 onClick={handleLogout}
                                 className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
                             >
-                                <FaArrowRightFromBracket className="text-[18px]" />
+                                <LogOut className="w-5 h-5" />
                                 <span>Sign out</span>
                             </button>
                         )}
@@ -260,7 +271,7 @@ export default function FrontendSidebar() {
                                 <div className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
                                     item.active ? 'bg-[#facc15] text-[#2a2b30]' : 'bg-transparent text-gray-400'
                                 }`}>
-                                    <item.icon className="text-[20px]" />
+                                    <item.icon className="w-5 h-5" />
                                 </div>
                                 {item.badge !== undefined && item.badge > 0 && (
                                     <span className="absolute -top-1 -right-2 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-[#2a2b30]">

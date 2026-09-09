@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { ChevronRight } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { ChevronRight, Facebook, Instagram, Twitter } from 'lucide-react';
 
 export default function FrontendFooter() {
     return (
@@ -27,21 +26,21 @@ export default function FrontendFooter() {
                                 className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
                                 aria-label="Facebook"
                             >
-                                <FaFacebookF className="text-xs" />
+                                <Facebook className="w-4 h-4" />
                             </a>
                             <a
                                 href="#"
                                 className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
                                 aria-label="Twitter"
                             >
-                                <FaTwitter className="text-xs" />
+                                <Twitter className="w-4 h-4" />
                             </a>
                             <a
                                 href="#"
                                 className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
                                 aria-label="Instagram"
                             >
-                                <FaInstagram className="text-xs" />
+                                <Instagram className="w-4 h-4" />
                             </a>
                         </div>
                     </div>

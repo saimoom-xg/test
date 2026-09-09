@@ -1,5 +1,4 @@
-import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Facebook, Instagram, Twitter } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 type FooterProps = {
@@ -31,9 +30,9 @@ export default function Footer({
                         </div>
                         <p className="text-[15px] font-medium text-brand-gray leading-relaxed pr-4">{description}</p>
                         <div className="flex gap-4">
-                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><FaFacebookF /></a>
-                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><FaTwitter /></a>
-                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><FaInstagram /></a>
+                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><Facebook className="w-5 h-5" /></a>
+                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><Twitter className="w-5 h-5" /></a>
+                            <a href="#" className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand-yellow transition-all shadow-sm hover:shadow-md"><Instagram className="w-5 h-5" /></a>
                         </div>
                     </div>
                     <div>
