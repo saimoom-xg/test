@@ -161,7 +161,7 @@ export default function PromotionalContentGridBlock({
             onMouseLeave={() => setIsPaused(false)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
-            className={`group/banner w-full relative rounded-2xl sm:rounded-[28px] bg-gradient-to-r from-[#fff0f3] via-[#ffe4e8] to-[#fce7f3] border sm:border-2 border-pink-200/80 p-3 sm:p-5 md:px-7 md:py-4.5 overflow-hidden shadow-[0_4px_20px_rgba(244,63,94,0.06)] hover:shadow-[0_8px_30px_rgba(244,63,94,0.12)] transition-all duration-300 select-none ${className}`}
+            className={`group/banner w-full relative rounded-2xl sm:rounded-[28px] bg-gradient-to-r from-[#fff0f3] via-[#ffe4e8] to-[#fce7f3] border sm:border-2 border-pink-200/80 p-3 sm:p-5 md:px-7 md:py-4.5 overflow-hidden shadow transition-all duration-300 select-none ${className}`}
         >
             {/* Cute Soft Pastel Ambient Blobs */}
             <div className="absolute -left-12 -top-12 w-48 h-48 rounded-full bg-pink-300/20 blur-2xl pointer-events-none" />
@@ -245,7 +245,7 @@ export default function PromotionalContentGridBlock({
                                 type="button"
                                 onClick={handleAddToCart}
                                 disabled={isAdding}
-                                className="h-7 sm:h-9 px-2.5 sm:px-6 rounded-full bg-[#f43f5e] hover:bg-[#e11d48] text-white font-extrabold text-[11px] sm:text-xs tracking-wide shadow-[0_3px_12px_rgba(244,63,94,0.32)] hover:shadow-[0_4px_16px_rgba(244,63,94,0.45)] active:scale-95 transition-all flex items-center gap-1 sm:gap-2 cursor-pointer disabled:opacity-50 shrink-0"
+                                className="h-7 sm:h-9 px-2.5 sm:px-6 rounded-full bg-[#f43f5e] hover:bg-[#e11d48] text-white font-extrabold text-[11px] sm:text-xs tracking-wide shadow-2xs active:scale-95 transition-all flex items-center gap-1 sm:gap-2 cursor-pointer disabled:opacity-50 shrink-0"
                                 aria-label={`Add ${currentProduct.name} to cart`}
                             >
                                 {isAdding ? (
@@ -260,10 +260,10 @@ export default function PromotionalContentGridBlock({
 
                             <Link
                                 href={`/products/${currentProduct.slug}`}
-                                className="hidden sm:flex h-9 px-4 rounded-full bg-white hover:bg-pink-50 border border-pink-200 text-[#784e59] hover:text-[#e11d48] font-bold text-xs items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                                className="hidden sm:flex h-9 px-4 rounded-full bg-cyan-300 text-black font-bold text-xs items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
                             >
                                 <span>Details</span>
-                                <ArrowRight className="w-3.5 h-3.5 text-pink-400 group-hover:translate-x-0.5 transition-transform" />
+                                <ArrowRight className="w-3.5 h-3.5 text-black group-hover:translate-x-0.5 transition-transform" />
                             </Link>
 
                             <Link
