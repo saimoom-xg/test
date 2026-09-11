@@ -16,11 +16,13 @@ import { useState, useEffect } from 'react';
 
 export default function FrontendSidebar() {
     const { url } = usePage();
-    const { auth, cart, wishlist } = usePage<any>().props;
+    const { auth, cart, wishlist, siteSettings } = usePage<any>().props;
     const user = auth?.user;
     const cartCount = cart?.count ?? cart?.item_count ?? 0;
     const wishlistCount = wishlist?.count ?? (Array.isArray(wishlist?.productIds) ? wishlist.productIds.length : 0);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const logoUrl = siteSettings?.site_logo || siteSettings?.['general.site_logo'];
+    const storeName = siteSettings?.site_title || 'Store';
 
     const isHome = url === '/' || url === '';
     const isShop = url.startsWith('/shop');
@@ -68,13 +70,18 @@ export default function FrontendSidebar() {
                 {/* Top Section: Logo + Main Nav */}
                 <div className="flex flex-col gap-3 min-h-0">
                     {/* Logo Area */}
-                    <Link href="/" className="flex flex-col items-center justify-center pt-0.5 pb-0.5 group cursor-pointer shrink-0">
-                        <img
-                            src="https://static.vecteezy.com/system/resources/previews/034/994/756/non_2x/illustration-of-threads-logo-free-png.png"
-                            alt="Logo"
-                            className="w-8 h-8 object-contain transition-transform group-hover:scale-105"
-                        />
-                        <span className="font-extrabold text-[10.5px] tracking-wide text-[#2a2b30] mt-0.5">Store</span>
+                    <Link href="/" className="flex items-center justify-center py-1 group cursor-pointer shrink-0" title={storeName}>
+                        {logoUrl ? (
+                            <img
+                                src={logoUrl}
+                                alt={storeName}
+                                className="w-12 h-12 object-contain transition-transform group-hover:scale-105"
+                            />
+                        ) : (
+                            <div className="w-10 h-10 rounded-2xl bg-[#2a2b30] text-[#facc15] flex items-center justify-center font-black text-lg">
+                                {storeName.charAt(0)}
+                            </div>
+                        )}
                     </Link>
 
                     {/* Main Nav Pill */}
@@ -209,14 +216,22 @@ export default function FrontendSidebar() {
             <div className={`fixed inset-y-0 left-0 w-[280px] bg-white z-[60] transform transition-transform duration-300 md:hidden ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between p-4 border-b border-black/5">
-                        <Link href="/" className="flex items-center gap-2">
-                            <div className="grid grid-cols-2 gap-[3px]">
-                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                                <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                            </div>
-                            <span className="text-xl font-bold tracking-tight text-black">Store</span>
+                        <Link href="/" className="flex items-center gap-2.5">
+                            {logoUrl ? (
+                                <img
+                                    src={logoUrl}
+                                    alt={storeName}
+                                    className="w-7 h-7 object-contain"
+                                />
+                            ) : (
+                                <div className="grid grid-cols-2 gap-[3px]">
+                                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                                </div>
+                            )}
+                            <span className="text-xl font-bold tracking-tight text-black">{storeName}</span>
                         </Link>
                         <button
                             type="button"

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Currency;
+use App\Models\Setting;
 use App\Services\CartService;
 use App\Services\WishlistService;
 use Illuminate\Http\Request;
@@ -98,10 +99,13 @@ class HandleInertiaRequests extends Middleware
             ]
             : $defaultCurrencyData;
 
+        $publicSettings = Setting::getPublicSettings();
+
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
+            'name' => $publicSettings['site_title'] ?? config('app.name'),
             'appUrl' => rtrim((string) config('app.url'), '/'),
+            'siteSettings' => $publicSettings,
             'auth' => [
                 'user' => $request->user() ? [
                     ...$request->user()->toArray(),

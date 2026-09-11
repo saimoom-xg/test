@@ -8,6 +8,7 @@ import {
     Mail,
     Package,
     Percent,
+    Settings,
     ShoppingCart,
     Tag,
     Ticket,
@@ -85,24 +86,15 @@ const mainNavItems: NavItem[] = [
         icon: Mail,
     },
     {
-        title: 'Currencies',
-        href: '/admin/settings/currencies',
-        icon: DollarSign,
-    },
-    {
-        title: 'Taxes',
-        href: '/admin/settings/taxes',
-        icon: Percent,
-    },
-    {
-        title: 'Shipping',
-        href: '/admin/settings/shipping',
-        icon: Truck,
-    },
-    {
-        title: 'Payments',
-        href: '/admin/settings/payments',
-        icon: CreditCard,
+        title: 'Settings',
+        href: '#',
+        icon: Settings,
+        items: [
+            { title: 'Currencies', href: '/admin/settings/currencies' },
+            { title: 'Taxes', href: '/admin/settings/taxes' },
+            { title: 'Shipping Methods', href: '/admin/settings/shipping' },
+            { title: 'Payment Methods', href: '/admin/settings/payments' },
+        ],
     },
 ];
 

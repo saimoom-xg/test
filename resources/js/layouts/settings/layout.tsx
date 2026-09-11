@@ -1,4 +1,5 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import { Globe } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
@@ -9,21 +10,32 @@ import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import type { NavItem } from '@/types';
 
-const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Profile',
-        href: edit(),
-        icon: null,
-    },
-    {
-        title: 'Appearance',
-        href: editAppearance(),
-        icon: null,
-    },
-];
-
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
+    const { auth } = usePage<any>().props;
+    const isAdmin = auth?.user?.roles?.includes('admin');
+
+    const sidebarNavItems: NavItem[] = [
+        ...(isAdmin
+            ? [
+                  {
+                      title: 'Site Configuration',
+                      href: '/admin/settings',
+                      icon: null,
+                  },
+              ]
+            : []),
+        {
+            title: 'Profile',
+            href: edit(),
+            icon: null,
+        },
+        {
+            title: 'Appearance',
+            href: editAppearance(),
+            icon: null,
+        },
+    ];
 
     return (
         <div className="px-4 py-6">

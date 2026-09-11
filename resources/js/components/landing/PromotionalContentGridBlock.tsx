@@ -1,5 +1,16 @@
 import { Link, router } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, ChevronRight as ArrowRight, Loader2, ShoppingBag, SlidersHorizontal } from 'lucide-react';
+import {
+    ArrowRight,
+    ChevronLeft,
+    ChevronRight,
+    Clock,
+    Flame,
+    Loader2,
+    ShoppingBag,
+    SlidersHorizontal,
+    Sparkles,
+    Star,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useCurrency } from '@/hooks/use-currency';
@@ -16,6 +27,8 @@ export type PromotionalProduct = {
     brand?: { name: string } | null;
     categories?: Array<{ id: number; name: string }>;
     images?: Array<{ path: string; is_primary?: boolean }>;
+    badge?: string;
+    offerHighlight?: string;
     [key: string]: any;
 };
 
@@ -42,11 +55,17 @@ export default function PromotionalContentGridBlock({
     const [isPaused, setIsPaused] = useState(false);
 
     // Strictly show real featured items dynamically
-    const featuredList: PromotionalProduct[] = (products && products.length > 0)
-        ? products.filter((p) => Boolean(p && p.id && (p.is_featured || p.featured)))
-        : (offers && offers.length > 0)
-        ? offers.map((o) => (o.product ? { ...o.product, ...o } : o)).filter((p) => Boolean(p && p.id))
-        : [];
+    const featuredList: PromotionalProduct[] = (() => {
+        if (products && products.length > 0) {
+            const explicitlyFeatured = products.filter((p) => Boolean(p && p.id && (p.is_featured || p.featured)));
+            if (explicitlyFeatured.length > 0) return explicitlyFeatured;
+            return products.filter((p) => Boolean(p && p.id));
+        }
+        if (offers && offers.length > 0) {
+            return offers.map((o) => (o.product ? { ...o.product, ...o } : o)).filter((p) => Boolean(p && p.id));
+        }
+        return [];
+    })();
 
     if (featuredList.length === 0) {
         return null;
@@ -65,13 +84,13 @@ export default function PromotionalContentGridBlock({
         setCurrentIndex((prev) => (prev + 1) % total);
     };
 
-    // Auto-play carousel every 4.5 seconds; pauses on hover or when adding to cart
+    // Auto-play carousel every 5.5 seconds; pauses on hover or when adding to cart
     useEffect(() => {
         if (total <= 1 || isPaused || isAdding) return;
 
         const timer = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % total);
-        }, 4500);
+        }, 5500);
 
         return () => clearInterval(timer);
     }, [total, isPaused, isAdding, currentIndex]);
@@ -118,167 +137,176 @@ export default function PromotionalContentGridBlock({
               )
             : null;
 
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchStartX(e.touches[0].clientX);
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (touchStartX === null) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        if (diff > 45) {
+            handleNext();
+        } else if (diff < -45) {
+            handlePrev();
+        }
+        setTouchStartX(null);
+    };
+
     return (
         <div
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
-            className={`col-span-1 sm:col-span-2 lg:col-span-2 relative rounded-[24px] p-5 sm:p-6 overflow-hidden flex flex-col justify-between bg-white border border-stone-200/80 shadow-xs hover:border-stone-300 transition-all duration-300 h-full ${className}`}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className={`group/banner w-full relative rounded-2xl sm:rounded-[28px] bg-gradient-to-r from-[#fff0f3] via-[#ffe4e8] to-[#fce7f3] border sm:border-2 border-pink-200/80 p-3 sm:p-5 md:px-7 md:py-4.5 overflow-hidden shadow-[0_4px_20px_rgba(244,63,94,0.06)] hover:shadow-[0_8px_30px_rgba(244,63,94,0.12)] transition-all duration-300 select-none ${className}`}
         >
-            {/* Top Bar: Minimal Section Tag on Left + Carousel Indicator & Controls on Right */}
-            <div className="flex items-center justify-between gap-3 mb-4">
-                <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-stone-400">
-                    Featured Selection
-                </span>
+            {/* Cute Soft Pastel Ambient Blobs */}
+            <div className="absolute -left-12 -top-12 w-48 h-48 rounded-full bg-pink-300/20 blur-2xl pointer-events-none" />
+            <div className="absolute -right-12 -bottom-12 w-56 h-56 rounded-full bg-rose-200/25 blur-2xl pointer-events-none" />
 
-                <div className="flex items-center gap-2.5">
-                    {/* Slide counter pill */}
-                    {total > 1 && (
-                        <div className="text-xs text-stone-400 font-light tracking-wider">
-                            <span className="text-stone-800 font-medium">{String(currentIndex + 1).padStart(2, '0')}</span>
-                            <span className="mx-1 text-stone-300">/</span>
-                            <span>{String(total).padStart(2, '0')}</span>
-                        </div>
-                    )}
+            <div className="relative z-10 grid grid-cols-12 gap-2.5 sm:gap-6 items-center">
+                {/* Left Side: Editorial Story & Cute Actions */}
+                <div className="col-span-7 sm:col-span-8 lg:col-span-8 xl:col-span-9 flex flex-col justify-center min-w-0">
+                    {/* Top Row: Cute Ribbon Pill & Navigation */}
+                    <div className="flex items-center justify-between gap-1.5 sm:gap-3 mb-1 sm:mb-1.5">
+                        <span className="inline-flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-bold text-[#e11d48] bg-white/95 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-pink-200/80 shadow-2xs truncate">
+                            <span className="text-[11px] sm:text-xs">🎀</span>
+                            <span className="font-extrabold truncate">{currentProduct.brand?.name || 'Chef’s Selection'}</span>
+                            <span className="hidden sm:inline text-pink-300">•</span>
+                            <span className="hidden sm:inline truncate text-pink-700 font-semibold">{currentProduct.badge || 'Sweet Treat of the Day'}</span>
+                        </span>
 
-                    {/* Carousel Navigation Buttons */}
-                    <div className="flex items-center gap-1">
-                        <button
-                            type="button"
-                            onClick={handlePrev}
-                            disabled={total <= 1}
-                            aria-label="Previous featured product"
-                            className={`w-7 h-7 rounded-full border border-stone-200 hover:border-stone-400 bg-white flex items-center justify-center text-stone-500 hover:text-stone-900 transition-colors ${
-                                total <= 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer active:scale-90'
-                            }`}
-                        >
-                            <ChevronLeft className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleNext}
-                            disabled={total <= 1}
-                            aria-label="Next featured product"
-                            className={`w-7 h-7 rounded-full border border-stone-200 hover:border-stone-400 bg-white flex items-center justify-center text-stone-500 hover:text-stone-900 transition-colors ${
-                                total <= 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer active:scale-90'
-                            }`}
-                        >
-                            <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Split Content: Left Side Static Content & Manage Link, Right Side Product Card */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 items-stretch flex-1">
-                
-                {/* Left Side: Static Editorial Content & Manage Link */}
-                <div className="flex flex-col justify-between py-1">
-                    <div>
-                        <h3 className="text-xl sm:text-[22px] font-light text-stone-900 leading-snug tracking-tight">
-                            {staticTitle}
-                        </h3>
-                        <p className="text-xs sm:text-[13px] text-stone-500 font-light mt-2.5 leading-relaxed line-clamp-3">
-                            {staticDescription}
-                        </p>
-
-                        {/* Minimalist Feature Tags */}
-                        <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-stone-100">
-                            <span className="text-[11px] text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full font-medium">
-                                Single-Origin Cacao
-                            </span>
-                            <span className="text-[11px] text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full font-medium">
-                                Small-Batch Artisan
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Left Side Manage Link */}
-                    <div className="mt-4 pt-3 border-t border-stone-100 flex items-center">
-                        <Link
-                            href={manageUrl}
-                            className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-800 hover:text-black transition-colors group"
-                        >
-                            <SlidersHorizontal className="w-3.5 h-3.5 text-stone-400 group-hover:text-stone-900 transition-colors" />
-                            <span className="underline underline-offset-4 decoration-stone-200 group-hover:decoration-stone-900">
-                                Manage Selection
-                            </span>
-                            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Right Side: Product Card */}
-                <div className="flex flex-col justify-between h-full">
-                    <div
-                        key={currentProduct.id}
-                        className="group/card relative rounded-[20px] bg-stone-50/80 hover:bg-stone-50 border border-stone-200/60 p-3.5 flex flex-col justify-between flex-1 transition-all duration-300"
-                    >
-                        <div>
-                            {/* Product Image */}
-                            <Link
-                                href={`/products/${currentProduct.slug}`}
-                                className="relative w-full h-[140px] sm:h-[145px] rounded-[15px] overflow-hidden bg-white object-cover p-3 flex items-center justify-center cursor-pointer block mb-2.5 border border-stone-200/50"
-                            >
-                                <img
-                                    src={getProductImg(currentProduct)}
-                                    alt={currentProduct.name}
-                                    className="w-full h-full object-cover mix-blend-multiply drop-shadow-xl scale-[1.15] transition-transform duration-500 group-hover:scale-[1.25]"
-                                />
-
-                                {discountPercent && discountPercent > 0 ? (
-                                    <span className="absolute top-2.5 right-2.5 text-[10px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full bg-stone-900 text-white shadow-xs">
-                                        -{discountPercent}%
-                                    </span>
-                                ) : (
-                                    <span className="absolute top-2.5 right-2.5 text-[10px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full bg-stone-100 text-stone-700">
-                                        Featured
-                                    </span>
-                                )}
-                            </Link>
-
-                            {/* Title & Brand */}
-                            <div>
-                                <p className="text-[10px] font-medium uppercase tracking-wider text-stone-400 truncate">
-                                    {currentProduct.brand?.name || 'Artisan Collection'}
-                                </p>
-                                <Link href={`/products/${currentProduct.slug}`}>
-                                    <h4 className="text-[13px] font-medium text-stone-900 line-clamp-2 h-[36px] leading-snug group-hover/card:text-stone-600 transition-colors mt-0.5">
-                                        {currentProduct.name}
-                                    </h4>
-                                </Link>
-                            </div>
-                        </div>
-
-                        {/* Price & Add to Cart Button */}
-                        <div className="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-between gap-2">
-                            <div className="flex items-baseline gap-1.5 min-w-0">
-                                <span className="text-[15px] font-medium text-stone-900 tracking-tight">
-                                    {formatPrice(currentProduct.sale_price || currentProduct.price)}
+                        {/* Cute Slide Indicators & Controls */}
+                        {total > 1 && (
+                            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+                                <span className="text-[10px] sm:text-[11px] font-bold text-[#e11d48] bg-white/95 px-1.5 sm:px-2.5 py-0.5 rounded-full border border-pink-200 shadow-2xs">
+                                    <span>{currentIndex + 1}</span>
+                                    <span className="text-pink-300 mx-0.5">/</span>
+                                    <span>{total}</span>
                                 </span>
-                                {currentProduct.sale_price && (
-                                    <span className="text-[11px] text-stone-400 line-through truncate font-light">
-                                        {formatPrice(currentProduct.price)}
-                                    </span>
-                                )}
-                            </div>
 
+                                <div className="flex items-center gap-0.5 sm:gap-1">
+                                    <button
+                                        type="button"
+                                        onClick={handlePrev}
+                                        aria-label="Previous featured sweet"
+                                        className="w-5.5 h-5.5 sm:w-6.5 sm:h-6.5 rounded-full bg-white hover:bg-[#f43f5e] hover:text-white border border-pink-200 text-[#e11d48] flex items-center justify-center transition-all cursor-pointer active:scale-95 shadow-2xs"
+                                    >
+                                        <ChevronLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleNext}
+                                        aria-label="Next featured sweet"
+                                        className="w-5.5 h-5.5 sm:w-6.5 sm:h-6.5 rounded-full bg-white hover:bg-[#f43f5e] hover:text-white border border-pink-200 text-[#e11d48] flex items-center justify-center transition-all cursor-pointer active:scale-95 shadow-2xs"
+                                    >
+                                        <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Cute Headline */}
+                    <Link href={`/products/${currentProduct.slug}`} className="group/title block mb-0.5 sm:mb-1">
+                        <h2 className="text-xs min-[360px]:text-sm sm:text-xl md:text-2xl font-black text-[#2e151e] tracking-tight leading-snug group-hover/title:text-[#e11d48] transition-colors line-clamp-2 sm:truncate">
+                            {currentProduct.name}
+                        </h2>
+                    </Link>
+
+                    {/* Tasting Note / Description (hidden on mobile to keep banner sleek & compact, visible on sm+) */}
+                    <p className="hidden sm:block text-xs sm:text-[13px] text-[#784e59] font-medium leading-relaxed truncate max-w-xl mb-2.5">
+                        {currentProduct.short_description || currentProduct.description || staticDescription}
+                    </p>
+
+                    {/* Bottom Action Row: Price & Cute Bouncy Button */}
+                    <div className="flex items-center justify-between sm:justify-start gap-1.5 sm:gap-3 mt-1 sm:mt-2.5 sm:pt-2.5 sm:border-t sm:border-pink-200/60">
+                        <div className="flex items-baseline gap-1 sm:gap-2">
+                            <span className="text-sm min-[360px]:text-base sm:text-2xl font-black text-[#e11d48] tracking-tight">
+                                {formatPrice(currentProduct.sale_price || currentProduct.price)}
+                            </span>
+                            {currentProduct.sale_price && (
+                                <span className="text-[10px] sm:text-xs text-[#9d737d] line-through font-semibold">
+                                    {formatPrice(currentProduct.price)}
+                                </span>
+                            )}
+                            {discountPercent && discountPercent > 0 && (
+                                <span className="hidden sm:inline-block text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-white text-[#e11d48] border border-pink-200 shadow-2xs ml-1">
+                                    Save {discountPercent}%
+                                </span>
+                            )}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 sm:gap-2.5 sm:ml-auto">
                             <button
                                 type="button"
                                 onClick={handleAddToCart}
                                 disabled={isAdding}
-                                className="h-8 px-3.5 rounded-full bg-stone-900 hover:bg-black text-white text-xs font-medium uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-40 shrink-0"
+                                className="h-7 sm:h-9 px-2.5 sm:px-6 rounded-full bg-[#f43f5e] hover:bg-[#e11d48] text-white font-extrabold text-[11px] sm:text-xs tracking-wide shadow-[0_3px_12px_rgba(244,63,94,0.32)] hover:shadow-[0_4px_16px_rgba(244,63,94,0.45)] active:scale-95 transition-all flex items-center gap-1 sm:gap-2 cursor-pointer disabled:opacity-50 shrink-0"
                                 aria-label={`Add ${currentProduct.name} to cart`}
                             >
                                 {isAdding ? (
-                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin text-white" />
                                 ) : (
                                     <>
-                                        <ShoppingBag className="w-3.5 h-3.5" />
-                                        {/* <span>Add</span> */}
+                                        <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                                        <span>Add<span className="hidden min-[380px]:inline">&nbsp;to Bag</span></span>
                                     </>
                                 )}
                             </button>
+
+                            <Link
+                                href={`/products/${currentProduct.slug}`}
+                                className="hidden sm:flex h-9 px-4 rounded-full bg-white hover:bg-pink-50 border border-pink-200 text-[#784e59] hover:text-[#e11d48] font-bold text-xs items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                            >
+                                <span>Details</span>
+                                <ArrowRight className="w-3.5 h-3.5 text-pink-400 group-hover:translate-x-0.5 transition-transform" />
+                            </Link>
+
+                            <Link
+                                href={manageUrl}
+                                className="p-1.5 text-pink-400 hover:text-[#e11d48] transition-colors hidden md:inline-flex"
+                                title="Manage featured items"
+                            >
+                                <SlidersHorizontal className="w-3.5 h-3.5" />
+                            </Link>
                         </div>
+                    </div>
+                </div>
+
+                {/* Right Side: Cute Macaron White Card Showcase (3-5 cols) */}
+                <div className="col-span-5 sm:col-span-4 lg:col-span-4 xl:col-span-3 flex items-center justify-end">
+                    <div className="relative w-full max-w-[115px] min-[360px]:max-w-[130px] sm:max-w-[210px] md:max-w-[230px] aspect-square sm:aspect-[4/3] rounded-2xl sm:rounded-[22px] bg-white p-1.5 sm:p-2.5 border border-pink-200/80 shadow-xs sm:shadow-sm flex items-center justify-center overflow-hidden group/pedestal">
+                        <Link
+                            href={`/products/${currentProduct.slug}`}
+                            className="w-full h-full flex items-center justify-center cursor-pointer relative z-10"
+                        >
+                            <img
+                                src={getProductImg(currentProduct)}
+                                alt={currentProduct.name}
+                                className="w-full h-full object-cover mix-blend-multiply scale-[1.10] sm:scale-[1.12] transition-transform duration-500 group-hover/pedestal:scale-[1.20]"
+                            />
+                        </Link>
+
+                        {/* Floating Cute Sticker Badge */}
+                        {discountPercent && discountPercent > 0 ? (
+                            <span className="absolute top-1 sm:top-1.5 left-1 sm:left-1.5 inline-flex items-center gap-0.5 sm:gap-1 text-[8.5px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full bg-[#f43f5e] text-white shadow-xs border border-white z-20">
+                                <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-white" />
+                                <span>-{discountPercent}%</span>
+                            </span>
+                        ) : (
+                            <span className="absolute top-1 sm:top-1.5 left-1 sm:left-1.5 inline-flex items-center gap-0.5 sm:gap-1 text-[8px] sm:text-[9.5px] font-black uppercase px-1.5 sm:px-2.5 py-0.5 rounded-full bg-red-400 text-white shadow-xs border border-white z-20">
+                                <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-white" />
+                                <span>Special</span>
+                            </span>
+                        )}
+
+                        <span className="hidden sm:inline-block absolute bottom-1.5 right-1.5 text-[9px] font-bold text-pink-700 bg-pink-50 px-2 py-0.5 rounded-md border border-pink-200/60 shadow-2xs z-20">
+                            {currentProduct.brand?.name || 'Artisan Series'}
+                        </span>
                     </div>
                 </div>
             </div>

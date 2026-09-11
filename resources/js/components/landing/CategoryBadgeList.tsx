@@ -68,7 +68,7 @@ export default function CategoryBadgeList({ categories, activeSlug }: CategoryBa
     const isAllActive = !activeSlug;
 
     return (
-        <div className="relative w-full mb-8 group">
+        <div className="relative w-full mb-6 group">
             {/* Left navigation arrow button with seamless gradient backdrop */}
             <div
                 className={`absolute left-0 top-0 bottom-0 z-10 flex items-center pr-6 sm:pr-8 bg-gradient-to-r from-[#f3eee7] via-[#f3eee7]/90 to-transparent transition-all duration-200 pointer-events-none ${

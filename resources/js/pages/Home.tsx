@@ -51,17 +51,15 @@ export default function Home() {
     flashList.forEach((p: any) => flashProductsMap.set(p.id, p));
     const flashSaleProducts = Array.from(flashProductsMap.values());
 
-    // Slice products to place cleanly into the 4-column layout:
-    // 1. Featured card loads first (takes 2 columns)
-    // 2. First 2 regular cards complete Row 1 (total 2 regular cards)
-    const row1Products = allProducts.slice(0, 2);
+    // Slicing products for the 4-column catalog grid:
+    // Row 1: First 4 regular product cards (fills 4 columns)
+    const row1Products = allProducts.slice(0, 4);
 
-    // 3. Row 2 starts with 2 regular cards (bringing total regular items loaded to 4 before Flash Sale)
-    const row2Products = allProducts.slice(2, 4);
+    // Row 2: Next 2 regular cards (pair with 2-column Flash Sale block to complete 4 columns)
+    const row2Products = allProducts.slice(4, 6);
 
-    // 4. Then Flash Sale card completes Row 2 (takes 2 columns)
-    // 5. Subsequent rows continue loading all remaining regular cards
-    const remainingProducts = allProducts.slice(4);
+    // Row 3 onwards: All remaining regular product cards
+    const remainingProducts = allProducts.slice(6);
 
     // Build custom promo offers if featured products are present
     const promoOffers = featuredProducts && featuredProducts.length > 0 ? [
@@ -126,34 +124,36 @@ export default function Home() {
         <>
             <Head title="Store - Curated Products & Special Offers" />
             <div className="flex-1 flex flex-col pb-12">
+                {/* Categories Bar */}
                 <CategoryBadgeList categories={categories || []} />
 
-                {/* 4-Column Responsive Grid with Integrated Promotional Blocks */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6 pt-4 items-stretch">
-                    {/* 1. Featured Card First (Two-Card-Wide Promotional Content Block) */}
+                {/* Full-Width Promotional Banner directly below category list */}
+                <div className="w-full pb-2">
                     <PromotionalContentGridBlock products={featuredProducts} offers={promoOffers} />
+                </div>
 
-                    {/* 2. First 2 Regular Cards (Completes Row 1 with 4 columns total) */}
+                {/* 4-Column Responsive Product Catalog Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6 pt-4 items-stretch">
+                    {/* Row 1: First 4 Regular Product Cards */}
                     {row1Products.map((product: any) => (
                         <div key={product.id} className="col-span-1 flex justify-center w-full h-full">
                             <ProductCard product={product} />
                         </div>
                     ))}
 
-                    {/* 3. Next 2 Regular Cards (Brings total regular cards loaded to 4) */}
+                    {/* Row 2: Flash Sale Block (2 cols) + 2 Regular Cards (2 cols) */}
+                    <FeaturedFlashSaleGridBlock
+                        title="Flash Sale"
+                        products={flashSaleProducts}
+                    />
+
                     {row2Products.map((product: any) => (
                         <div key={product.id} className="col-span-1 flex justify-center w-full h-full">
                             <ProductCard product={product} />
                         </div>
                     ))}
 
-                    {/* 4. Flash Sale Card (Two-Card-Wide Flash Sale Block, Completes Row 2 after 4 items) */}
-                    <FeaturedFlashSaleGridBlock
-                        title="Flash Sale"
-                        products={flashSaleProducts}
-                    />
-
-                    {/* 5. Continue Loading All Remaining Regular Cards (4 per row) */}
+                    {/* Row 3+: All Remaining Regular Product Cards */}
                     {remainingProducts.map((product: any) => (
                         <div key={product.id} className="col-span-1 flex justify-center w-full h-full">
                             <ProductCard product={product} />

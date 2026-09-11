@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', LandingPageController::class)->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+Route::get('/api/search/suggestions', [ShopController::class, 'suggestions'])->name('search.suggestions');
 Route::get('/products/{slug}', ProductDetailController::class)->name('products.show');
 Route::get('/wishlist', fn () => redirect()->route('user.wishlist'))->name('wishlist');
 

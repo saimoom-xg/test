@@ -142,4 +142,49 @@ class ShopController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Search product suggestions for live autocomplete.
+     */
+    public function suggestions(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $q = trim((string) $request->input('q', ''));
+        if (strlen($q) < 2) {
+            return response()->json(['products' => []]);
+        }
+
+        $products = Product::query()
+            ->where('status', 'published')
+            ->where('is_active', true)
+            ->where(function ($w) use ($q): void {
+                $w->where('name', 'like', "%{$q}%")
+                    ->orWhere('short_description', 'like', "%{$q}%")
+                    ->orWhere('sku', 'like', "%{$q}%")
+                    ->orWhereHas('brand', fn ($bq) => $bq->where('name', 'like', "%{$q}%"));
+            })
+            ->with(['brand:id,name', 'images' => fn ($iq) => $iq->orderByDesc('is_primary')->limit(1)])
+            ->limit(6)
+            ->get(['id', 'name', 'slug', 'price', 'sale_price', 'brand_id']);
+
+        $results = $products->map(function ($p): array {
+            $image = $p->images->first();
+            $imagePath = $image ? $image->path : null;
+            if ($imagePath && ! str_starts_with($imagePath, 'http')) {
+                $imagePath = "/storage/{$imagePath}";
+            }
+
+            return [
+                'id' => $p->id,
+                'name' => $p->name,
+                'slug' => $p->slug,
+                'price' => (float) $p->price,
+                'sale_price' => $p->sale_price !== null ? (float) $p->sale_price : null,
+                'brand' => $p->brand?->name,
+                'image' => $imagePath,
+            ];
+        });
+
+        return response()->json(['products' => $results]);
+    }
 }
+

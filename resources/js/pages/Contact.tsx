@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { type FormEvent } from 'react';
 import {
     ArrowRight,
@@ -25,40 +25,52 @@ type ContactForm = {
     message: string;
 };
 
-const contactChannels = [
-    {
-        icon: MapPin,
-        title: 'Visit the Atelier',
-        lines: ['128 Cocoa Lane, Suite 4', 'Brussels, BE 1000'],
-    },
-    {
-        icon: Phone,
-        title: 'Call Us',
-        lines: ['+1 (555) 012-3456', 'Mon–Fri, 9am–6pm'],
-    },
-    {
-        icon: Mail,
-        title: 'Email Us',
-        lines: ['hello@chocolatstore.com', 'Replies within 24 hours'],
-    },
-    {
-        icon: Clock,
-        title: 'Tasting Room Hours',
-        lines: ['Mon–Sat: 9:00 – 19:00', 'Sunday: 10:00 – 16:00'],
-    },
-];
-
-const socials = [
-    { icon: Facebook, label: 'Facebook' },
-    { icon: Instagram, label: 'Instagram' },
-    { icon: Twitter, label: 'Twitter' },
-    { icon: Youtube, label: 'YouTube' },
-];
-
 const inputClasses =
     'w-full bg-white border border-black/10 rounded-[14px] px-4 py-3 text-[13.5px] font-medium text-[#2a2b30] placeholder:text-[#a8a7a2] outline-none focus:border-[#2a2b30] focus:ring-4 focus:ring-[#2a2b30]/5 transition-all';
 
 export default function Contact() {
+    const { siteSettings } = usePage<any>().props;
+
+    const contactChannels = [
+        {
+            icon: MapPin,
+            title: 'Visit the Atelier',
+            lines: [
+                siteSettings?.contact_address || '128 Cocoa Lane, Suite 4, Brussels, BE 1000',
+                'Visit during showroom hours',
+            ],
+        },
+        {
+            icon: Phone,
+            title: 'Call Us',
+            lines: [
+                siteSettings?.contact_phone || '+1 (555) 012-3456',
+                siteSettings?.contact_whatsapp ? `WhatsApp: ${siteSettings.contact_whatsapp}` : 'Mon–Fri, 9am–6pm',
+            ],
+        },
+        {
+            icon: Mail,
+            title: 'Email Us',
+            lines: [
+                siteSettings?.contact_email || 'hello@storehub.com',
+                'Replies within 24 hours',
+            ],
+        },
+        {
+            icon: Clock,
+            title: 'Tasting Room Hours',
+            lines: siteSettings?.business_hours
+                ? siteSettings.business_hours.split('\n').filter(Boolean)
+                : ['Mon–Sat: 9:00 – 19:00', 'Sunday: 10:00 – 16:00'],
+        },
+    ];
+
+    const socials = [
+        { icon: Facebook, label: 'Facebook', href: siteSettings?.facebook || '#' },
+        { icon: Instagram, label: 'Instagram', href: siteSettings?.instagram || '#' },
+        { icon: Twitter, label: 'Twitter', href: siteSettings?.twitter || '#' },
+        { icon: Youtube, label: 'YouTube', href: siteSettings?.youtube || '#' },
+    ];
     const form = useForm<ContactForm>({
         name: '',
         email: '',
@@ -115,7 +127,7 @@ export default function Contact() {
                             </div>
                             <div>
                                 <h3 className="text-[14px] font-bold text-[#2a2b30]">{channel.title}</h3>
-                                {channel.lines.map((line) => (
+                                {channel.lines.map((line: string) => (
                                     <p key={line} className="text-[12.5px] font-medium text-[#8e8d89] mt-1 leading-relaxed">
                                         {line}
                                     </p>
@@ -137,7 +149,9 @@ export default function Contact() {
                         {socials.map((social) => (
                             <a
                                 key={social.label}
-                                href="#"
+                                href={social.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 aria-label={social.label}
                                 title={social.label}
                                 className="w-10 h-10 bg-[#f8f6f2] border border-black/5 rounded-full flex items-center justify-center text-[#2a2b30] hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all"

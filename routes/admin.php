@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\TaxRateController;
@@ -101,6 +102,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('contacts/{contact}/close', [ContactMessageController::class, 'close'])->name('contacts.close');
 
     Route::prefix('settings')->name('settings.')->group(function (): void {
+        Route::get('/', [SettingController::class, 'index'])->name('index');
+        Route::post('/', [SettingController::class, 'update'])->name('update');
+        Route::post('test-mail', [SettingController::class, 'testMail'])->name('test-mail');
         Route::resource('currencies', CurrencyController::class);
         Route::resource('taxes', TaxRateController::class);
         Route::resource('shipping', ShippingMethodController::class);

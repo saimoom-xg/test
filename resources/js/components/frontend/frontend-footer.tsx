@@ -1,48 +1,113 @@
-import { Link } from '@inertiajs/react';
-import { ChevronRight, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { ChevronRight, Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
+
+const toBoolean = (val: any): boolean => val === true || val === 1 || val === '1' || val === 'true';
 
 export default function FrontendFooter() {
+    const { siteSettings } = usePage<any>().props;
+    const storeName = siteSettings?.site_title || 'StoreHub';
+    const aboutText = siteSettings?.footer_about_text || 'Your premier destination for curated fashion, accessories, and lifestyle essentials. Quality products with seamless delivery.';
+    const currentYear = new Date().getFullYear().toString();
+    const copyright = siteSettings?.copyright_text
+        ? siteSettings.copyright_text.replace('{year}', currentYear)
+        : `© ${currentYear} ${storeName}. All rights reserved.`;
+
+    const facebook = siteSettings?.facebook;
+    const twitter = siteSettings?.twitter;
+    const instagram = siteSettings?.instagram;
+    const youtube = siteSettings?.youtube;
+    const linkedin = siteSettings?.linkedin;
+    const showSocials = siteSettings?.footer_show_socials !== undefined ? toBoolean(siteSettings.footer_show_socials) : true;
+    const showNewsletter = siteSettings?.footer_show_newsletter !== undefined ? toBoolean(siteSettings.footer_show_newsletter) : true;
+    const showPaymentMethods = siteSettings?.footer_show_payment_methods !== undefined ? toBoolean(siteSettings.footer_show_payment_methods) : true;
+
+    const logoUrl = siteSettings?.site_logo;
+
     return (
         <footer className="mt-auto pt-16 pb-8 border-t border-gray-200/60 text-[#2a2b30]">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
                     {/* Brand Info */}
                     <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-2.5 cursor-pointer">
-                            <div className="grid grid-cols-2 gap-[3px]">
-                                <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
-                                <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
-                                <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
-                                <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
-                            </div>
-                            <span className="text-xl font-extrabold tracking-tight text-[#2a2b30]">StoreHub</span>
-                        </div>
+                        <Link href="/" className="flex items-center gap-3 group cursor-pointer">
+                            {logoUrl ? (
+                                <img
+                                    src={logoUrl}
+                                    alt={storeName}
+                                    className="h-8 max-w-[140px] object-contain transition-transform group-hover:scale-105"
+                                />
+                            ) : (
+                                <div className="grid grid-cols-2 gap-[3px]">
+                                    <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
+                                    <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
+                                    <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
+                                    <div className="w-1.5 h-1.5 bg-[#2a2b30] rounded-full" />
+                                </div>
+                            )}
+                            <span className="text-xl font-extrabold tracking-tight text-[#2a2b30]">{storeName}</span>
+                        </Link>
                         <p className="text-[13.5px] text-gray-500 font-medium leading-relaxed pr-2">
-                            Your premier destination for curated fashion, accessories, and lifestyle essentials. Quality products with seamless delivery.
+                            {aboutText}
                         </p>
-                        <div className="flex gap-2.5 pt-1">
-                            <a
-                                href="#"
-                                className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
-                                aria-label="Facebook"
-                            >
-                                <Facebook className="w-4 h-4" />
-                            </a>
-                            <a
-                                href="#"
-                                className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
-                                aria-label="Twitter"
-                            >
-                                <Twitter className="w-4 h-4" />
-                            </a>
-                            <a
-                                href="#"
-                                className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
-                                aria-label="Instagram"
-                            >
-                                <Instagram className="w-4 h-4" />
-                            </a>
-                        </div>
+                        {showSocials && (
+                            <div className="flex gap-2.5 pt-1">
+                                {facebook && (
+                                    <a
+                                        href={facebook}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
+                                        aria-label="Facebook"
+                                    >
+                                        <Facebook className="w-4 h-4" />
+                                    </a>
+                                )}
+                                {twitter && (
+                                    <a
+                                        href={twitter}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
+                                        aria-label="Twitter"
+                                    >
+                                        <Twitter className="w-4 h-4" />
+                                    </a>
+                                )}
+                                {instagram && (
+                                    <a
+                                        href={instagram}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
+                                        aria-label="Instagram"
+                                    >
+                                        <Instagram className="w-4 h-4" />
+                                    </a>
+                                )}
+                                {youtube && (
+                                    <a
+                                        href={youtube}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
+                                        aria-label="YouTube"
+                                    >
+                                        <Youtube className="w-4 h-4" />
+                                    </a>
+                                )}
+                                {linkedin && (
+                                    <a
+                                        href={linkedin}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-9 h-9 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-700 hover:bg-[#2a2b30] hover:text-[#facc15] hover:border-[#2a2b30] transition-all shadow-xs"
+                                        aria-label="LinkedIn"
+                                    >
+                                        <Linkedin className="w-4 h-4" />
+                                    </a>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {/* Quick Links */}
@@ -105,30 +170,40 @@ export default function FrontendFooter() {
                     </div>
 
                     {/* Newsletter */}
-                    <div>
-                        <h4 className="font-bold text-sm tracking-wide uppercase text-[#2a2b30] mb-4">Newsletter</h4>
-                        <p className="text-[13.5px] text-gray-500 font-medium mb-3">
-                            Subscribe to receive insider updates, seasonal promotions, and early access.
-                        </p>
-                        <div className="relative flex items-center">
-                            <input
-                                type="email"
-                                placeholder="Your email address"
-                                className="w-full bg-white border border-black/10 rounded-full pl-4 pr-24 py-2 text-[13px] outline-none focus:border-black font-medium shadow-xs"
-                            />
-                            <button
-                                type="button"
-                                className="absolute right-1 top-1 bottom-1 bg-[#2a2b30] text-white px-3.5 rounded-full text-xs font-bold hover:bg-black transition-colors"
-                            >
-                                Join
-                            </button>
+                    {showNewsletter && (
+                        <div>
+                            <h4 className="font-bold text-sm tracking-wide uppercase text-[#2a2b30] mb-4">Newsletter</h4>
+                            <p className="text-[13.5px] text-gray-500 font-medium mb-3">
+                                Subscribe to receive insider updates, seasonal promotions, and early access.
+                            </p>
+                            <div className="relative flex items-center">
+                                <input
+                                    type="email"
+                                    placeholder="Your email address"
+                                    className="w-full bg-white border border-black/10 rounded-full pl-4 pr-24 py-2 text-[13px] outline-none focus:border-black font-medium shadow-xs"
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute right-1 top-1 bottom-1 bg-[#2a2b30] text-white px-3.5 rounded-full text-xs font-bold hover:bg-black transition-colors"
+                                >
+                                    Join
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Bottom Bar */}
                 <div className="border-t border-gray-200/60 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-medium text-gray-400">
-                    <p>&copy; {new Date().getFullYear()} StoreHub. All rights reserved.</p>
+                    <p>{copyright}</p>
+                    {showPaymentMethods && (
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-500">
+                            <span className="px-2 py-0.5 rounded bg-white border border-gray-200 text-[10px] tracking-wider font-bold">VISA</span>
+                            <span className="px-2 py-0.5 rounded bg-white border border-gray-200 text-[10px] tracking-wider font-bold">MC</span>
+                            <span className="px-2 py-0.5 rounded bg-white border border-gray-200 text-[10px] tracking-wider font-bold">AMEX</span>
+                            <span className="px-2 py-0.5 rounded bg-white border border-gray-200 text-[10px] tracking-wider font-bold">PAYPAL</span>
+                        </div>
+                    )}
                     <div className="flex gap-6">
                         <Link href="/privacy-policy" prefetch className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
                         <Link href="/terms-conditions" prefetch className="hover:text-gray-600 transition-colors">Terms of Service</Link>

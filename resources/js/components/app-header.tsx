@@ -64,8 +64,10 @@ const activeItemStyles =
     'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
 export function AppHeader({ breadcrumbs = [] }: Props) {
-    const page = usePage();
-    const { auth } = page.props;
+    const page = usePage<any>();
+    const { auth, siteSettings, name } = page.props;
+    const siteTitle = siteSettings?.site_title || siteSettings?.['general.site_title'] || name || 'StoreHub';
+    const siteLogo = siteSettings?.site_logo || siteSettings?.['general.site_logo'];
     const getInitials = useInitials();
     const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
 
@@ -93,7 +95,20 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                     Navigation menu
                                 </SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
+                                    <Link href={dashboard()} className="flex items-center gap-2.5">
+                                        {siteLogo ? (
+                                            <img
+                                                src={siteLogo}
+                                                alt={siteTitle}
+                                                className="h-7 w-7 object-contain"
+                                            />
+                                        ) : (
+                                            <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
+                                        )}
+                                        <span className="font-bold text-sm tracking-tight text-[#2a2b30] dark:text-white">
+                                            {siteTitle}
+                                        </span>
+                                    </Link>
                                 </SheetHeader>
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">

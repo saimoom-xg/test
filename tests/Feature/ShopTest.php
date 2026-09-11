@@ -134,3 +134,32 @@ test('can sort products by price ascending', function () {
         ->where('products.data.1.name', 'Expensive Item')
     );
 });
+
+test('search suggestions endpoint returns matching products', function () {
+    Product::factory()->create([
+        'name' => 'Artisanal Caramel Truffle Box',
+        'status' => 'published',
+        'is_active' => true,
+        'price' => 24.50,
+    ]);
+    Product::factory()->create([
+        'name' => 'Vanilla Bean Marshmallows',
+        'status' => 'published',
+        'is_active' => true,
+        'price' => 12.00,
+    ]);
+
+    $response = $this->getJson(route('search.suggestions', ['q' => 'Caramel']));
+
+    $response->assertOk();
+    $response->assertJsonCount(1, 'products');
+    $response->assertJsonPath('products.0.name', 'Artisanal Caramel Truffle Box');
+});
+
+test('search suggestions endpoint returns empty list for short queries', function () {
+    $response = $this->getJson(route('search.suggestions', ['q' => 'a']));
+
+    $response->assertOk();
+    $response->assertJsonCount(0, 'products');
+});
+

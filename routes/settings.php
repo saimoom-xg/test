@@ -25,7 +25,13 @@ Route::post('logout', function (Request $request) {
 })->name('logout');
 
 Route::middleware(['auth'])->group(function (): void {
-    Route::redirect('settings', '/settings/profile');
+    Route::get('settings', function () {
+        if (auth()->user()?->hasRole('admin')) {
+            return redirect()->route('admin.settings.index');
+        }
+
+        return redirect()->route('profile.edit');
+    })->name('settings');
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
