@@ -69,10 +69,10 @@ export default function FrontendHeader({
     }>>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const searchContainerRef = useRef<HTMLDivElement>(null);
+    const mobileSearchContainerRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
-    const mobileInputRef = useRef<HTMLInputElement>(null);
+    const mobileSearchInputRef = useRef<HTMLInputElement>(null);
 
     // Sync with URL query parameter on navigation
     useEffect(() => {
@@ -81,7 +81,6 @@ export default function FrontendHeader({
             setSearchQuery(params.get('search') || '');
         }
         setIsOpen(false);
-        setIsMobileSearchOpen(false);
     }, [pageUrl]);
 
     // Debounced search autocomplete
@@ -115,14 +114,16 @@ export default function FrontendHeader({
     // Handle click outside & Escape key
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
-            if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+            const target = e.target as Node;
+            const clickedDesktop = searchContainerRef.current && searchContainerRef.current.contains(target);
+            const clickedMobile = mobileSearchContainerRef.current && mobileSearchContainerRef.current.contains(target);
+            if (!clickedDesktop && !clickedMobile) {
                 setIsOpen(false);
             }
         };
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
                 setIsOpen(false);
-                setIsMobileSearchOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -137,7 +138,6 @@ export default function FrontendHeader({
         if (e) e.preventDefault();
         const term = searchQuery.trim();
         setIsOpen(false);
-        setIsMobileSearchOpen(false);
         if (term) {
             router.get('/shop', { search: term });
         } else {
@@ -149,17 +149,111 @@ export default function FrontendHeader({
         setSearchQuery('');
         setSuggestions([]);
         setIsOpen(false);
-        searchInputRef.current?.focus();
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            mobileSearchInputRef.current?.focus();
+        } else {
+            searchInputRef.current?.focus();
+        }
     };
 
     const handleSelectProduct = (slug: string) => {
         setIsOpen(false);
-        setIsMobileSearchOpen(false);
         router.get(`/products/${slug}`);
     };
 
     const toggleSidebar = () => {
         window.dispatchEvent(new Event('toggle-mobile-menu'));
+    };
+
+    const renderSuggestionsDropdown = () => {
+        if (!isOpen || searchQuery.trim().length < 2) return null;
+
+        return (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-black/10 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                {isLoading && suggestions.length === 0 ? (
+                    <div className="p-4 flex items-center justify-center gap-2 text-xs text-gray-500 font-medium">
+                        <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                        <span>Searching catalog...</span>
+                    </div>
+                ) : suggestions.length > 0 ? (
+                    <div className="py-2">
+                        <div className="px-3.5 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                            Matching Products ({suggestions.length})
+                        </div>
+                        <div className="max-h-[300px] overflow-y-auto divide-y divide-gray-100">
+                            {suggestions.map((p) => (
+                                <button
+                                    key={p.id}
+                                    type="button"
+                                    onClick={() => handleSelectProduct(p.slug)}
+                                    className="w-full px-3.5 py-2.5 flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100 transition-colors text-left cursor-pointer group"
+                                >
+                                    {p.image ? (
+                                        <img
+                                            src={p.image}
+                                            alt={p.name}
+                                            className="w-10 h-10 rounded-lg object-cover bg-gray-50 shrink-0 border border-black/5"
+                                        />
+                                    ) : (
+                                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                                            <Search className="w-4 h-4 text-gray-400" />
+                                        </div>
+                                    )}
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-xs font-semibold text-gray-900 truncate group-hover:text-black">
+                                            {p.name}
+                                        </p>
+                                        {p.brand && (
+                                            <p className="text-[10.5px] text-gray-400 font-medium truncate">
+                                                {p.brand}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="text-right shrink-0">
+                                        {p.sale_price !== null && p.sale_price < p.price ? (
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-xs font-bold text-red-600">
+                                                    {formatPrice(p.sale_price)}
+                                                </span>
+                                                <span className="text-[10px] text-gray-400 line-through">
+                                                    {formatPrice(p.price)}
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <span className="text-xs font-bold text-gray-800">
+                                                {formatPrice(p.price)}
+                                            </span>
+                                        )}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                        <div className="p-2 border-t border-gray-100 bg-gray-50/50">
+                            <button
+                                type="button"
+                                onClick={() => handleSearchSubmit()}
+                                className="w-full py-1.5 px-3 rounded-xl bg-gray-100 hover:bg-[#2a2b30] hover:text-white transition-all text-xs font-semibold text-gray-700 flex items-center justify-center gap-1.5 cursor-pointer"
+                            >
+                                <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="p-4 text-center">
+                        <p className="text-xs font-semibold text-gray-700">No products found</p>
+                        <p className="text-[11px] text-gray-400 mt-0.5">Try searching for other keywords.</p>
+                        <button
+                            type="button"
+                            onClick={() => handleSearchSubmit()}
+                            className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold text-gray-800 hover:underline cursor-pointer"
+                        >
+                            Search in Shop catalog →
+                        </button>
+                    </div>
+                )}
+            </div>
+        );
     };
 
     return (
@@ -207,23 +301,6 @@ export default function FrontendHeader({
                     </div>
 
                     <div className="flex items-center gap-2 md:hidden">
-                        {showSearch && (
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsMobileSearchOpen((prev) => !prev);
-                                    setTimeout(() => mobileInputRef.current?.focus(), 100);
-                                }}
-                                className={`flex h-10 w-10 items-center justify-center rounded-full border border-black/5 shadow-sm transition-colors ${
-                                    isMobileSearchOpen || searchQuery
-                                        ? 'bg-[#2a2b30] text-[#facc15]'
-                                        : 'bg-white text-[#2a2b30] hover:bg-gray-50'
-                                }`}
-                                aria-label="Search products"
-                            >
-                                <Search className="h-4 w-4" />
-                            </button>
-                        )}
                         <button
                             type="button"
                             onClick={toggleSidebar}
@@ -235,106 +312,6 @@ export default function FrontendHeader({
                     </div>
                 </div>
 
-                {/* Mobile Expandable Search Bar */}
-                {showSearch && isMobileSearchOpen && (
-                    <div className="w-full mt-2 md:hidden animate-in fade-in slide-in-from-top-2 duration-150 relative">
-                        <form
-                            onSubmit={handleSearchSubmit}
-                            className="relative bg-white rounded-2xl shadow-sm border border-black/10 flex items-center px-4 py-2.5 w-full"
-                        >
-                            <Search className="text-gray-400 w-4 h-4 mr-2.5 shrink-0" />
-                            <input
-                                ref={mobileInputRef}
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onFocus={() => {
-                                    if (searchQuery.trim().length >= 2 && suggestions.length > 0) setIsOpen(true);
-                                }}
-                                placeholder="Search products..."
-                                className="bg-transparent border-none outline-none w-full text-[13.5px] font-medium text-gray-700 placeholder:text-[#a8a7a2]"
-                            />
-                            {isLoading && (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin text-gray-400 shrink-0 mr-1.5" />
-                            )}
-                            {searchQuery && (
-                                <button
-                                    type="button"
-                                    onClick={handleClear}
-                                    className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 mr-1.5"
-                                >
-                                    <X className="w-3.5 h-3.5" />
-                                </button>
-                            )}
-                            <button
-                                type="submit"
-                                className="bg-[#2a2b30] text-white px-3 py-1 rounded-xl text-xs font-semibold hover:bg-black transition-colors shrink-0"
-                            >
-                                Search
-                            </button>
-                        </form>
-
-                        {/* Mobile Live Suggestions Dropdown */}
-                        {isOpen && searchQuery.trim().length >= 2 && (
-                            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-black/10 overflow-hidden z-50">
-                                {isLoading && suggestions.length === 0 ? (
-                                    <div className="p-4 flex items-center justify-center gap-2 text-xs text-gray-500 font-medium">
-                                        <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-                                        <span>Searching catalog...</span>
-                                    </div>
-                                ) : suggestions.length > 0 ? (
-                                    <div className="py-2">
-                                        <div className="max-h-[260px] overflow-y-auto divide-y divide-gray-100">
-                                            {suggestions.map((p) => (
-                                                <button
-                                                    key={p.id}
-                                                    type="button"
-                                                    onClick={() => handleSelectProduct(p.slug)}
-                                                    className="w-full px-3.5 py-2 flex items-center gap-3 hover:bg-gray-50 text-left"
-                                                >
-                                                    {p.image ? (
-                                                        <img
-                                                            src={p.image}
-                                                            alt={p.name}
-                                                            className="w-9 h-9 rounded-lg object-cover shrink-0 border border-black/5"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                                                            <Search className="w-3.5 h-3.5 text-gray-400" />
-                                                        </div>
-                                                    )}
-                                                    <div className="min-w-0 flex-1">
-                                                        <p className="text-xs font-semibold text-gray-900 truncate">
-                                                            {p.name}
-                                                        </p>
-                                                        <span className="text-xs font-bold text-gray-800">
-                                                            {formatPrice(p.sale_price !== null && p.sale_price < p.price ? p.sale_price : p.price)}
-                                                        </span>
-                                                    </div>
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <div className="p-2 border-t border-gray-100 bg-gray-50">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleSearchSubmit()}
-                                                className="w-full py-1.5 px-3 rounded-xl bg-gray-200 text-xs font-semibold text-gray-700 flex items-center justify-center gap-1"
-                                            >
-                                                <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
-                                                <ArrowRight className="w-3 h-3" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="p-3 text-center text-xs text-gray-500">
-                                        No products found. Press search to browse catalog.
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                )}
-
                 <div className="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
                     {showSearch && (
                         <div ref={searchContainerRef} className="relative w-full sm:w-[270px] lg:w-[320px]">
@@ -344,7 +321,13 @@ export default function FrontendHeader({
                                     isOpen ? 'border-[#2a2b30] ring-2 ring-[#2a2b30]/5' : 'border-black/5 hover:border-black/15'
                                 }`}
                             >
-                                <Search className="text-gray-400 w-4 h-4 mr-2.5 shrink-0" />
+                                <button
+                                    type="submit"
+                                    aria-label="Submit search"
+                                    className="text-gray-400 hover:text-gray-600 mr-2.5 shrink-0 cursor-pointer flex items-center justify-center p-0 bg-transparent border-none"
+                                >
+                                    <Search className="w-4 h-4" />
+                                </button>
                                 <input
                                     ref={searchInputRef}
                                     type="text"
@@ -367,7 +350,7 @@ export default function FrontendHeader({
                                     <button
                                         type="button"
                                         onClick={handleClear}
-                                        className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 shrink-0 transition-colors"
+                                        className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 shrink-0 transition-colors cursor-pointer"
                                         title="Clear search"
                                     >
                                         <X className="w-3.5 h-3.5" />
@@ -376,92 +359,7 @@ export default function FrontendHeader({
                             </form>
 
                             {/* Live Autocomplete Dropdown */}
-                            {isOpen && searchQuery.trim().length >= 2 && (
-                                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-black/10 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                                    {isLoading && suggestions.length === 0 ? (
-                                        <div className="p-4 flex items-center justify-center gap-2 text-xs text-gray-500 font-medium">
-                                            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-                                            <span>Searching catalog...</span>
-                                        </div>
-                                    ) : suggestions.length > 0 ? (
-                                        <div className="py-2">
-                                            <div className="px-3.5 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                                                Matching Products ({suggestions.length})
-                                            </div>
-                                            <div className="max-h-[320px] overflow-y-auto divide-y divide-gray-100">
-                                                {suggestions.map((p) => (
-                                                    <button
-                                                        key={p.id}
-                                                        type="button"
-                                                        onClick={() => handleSelectProduct(p.slug)}
-                                                        className="w-full px-3.5 py-2.5 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left cursor-pointer group"
-                                                    >
-                                                        {p.image ? (
-                                                            <img
-                                                                src={p.image}
-                                                                alt={p.name}
-                                                                className="w-10 h-10 rounded-lg object-cover bg-gray-50 shrink-0 border border-black/5"
-                                                            />
-                                                        ) : (
-                                                            <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                                                                <Search className="w-4 h-4 text-gray-400" />
-                                                            </div>
-                                                        )}
-                                                        <div className="min-w-0 flex-1">
-                                                            <p className="text-xs font-semibold text-gray-900 truncate group-hover:text-black">
-                                                                {p.name}
-                                                            </p>
-                                                            {p.brand && (
-                                                                <p className="text-[10.5px] text-gray-400 font-medium truncate">
-                                                                    {p.brand}
-                                                                </p>
-                                                            )}
-                                                        </div>
-                                                        <div className="text-right shrink-0">
-                                                            {p.sale_price !== null && p.sale_price < p.price ? (
-                                                                <div className="flex flex-col items-end">
-                                                                    <span className="text-xs font-bold text-red-600">
-                                                                        {formatPrice(p.sale_price)}
-                                                                    </span>
-                                                                    <span className="text-[10px] text-gray-400 line-through">
-                                                                        {formatPrice(p.price)}
-                                                                    </span>
-                                                                </div>
-                                                            ) : (
-                                                                <span className="text-xs font-bold text-gray-800">
-                                                                    {formatPrice(p.price)}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                            <div className="p-2 border-t border-gray-100 bg-gray-50/50">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleSearchSubmit()}
-                                                    className="w-full py-1.5 px-3 rounded-xl bg-gray-100 hover:bg-[#2a2b30] hover:text-white transition-all text-xs font-semibold text-gray-700 flex items-center justify-center gap-1.5 cursor-pointer"
-                                                >
-                                                    <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
-                                                    <ArrowRight className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="p-4 text-center">
-                                            <p className="text-xs font-semibold text-gray-700">No products found</p>
-                                            <p className="text-[11px] text-gray-400 mt-0.5">Try searching for other keywords.</p>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleSearchSubmit()}
-                                                className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold text-gray-800 hover:underline"
-                                            >
-                                                Search in Shop catalog →
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            {renderSuggestionsDropdown()}
                         </div>
                     )}
 
@@ -529,29 +427,55 @@ export default function FrontendHeader({
                 </Link>
             </div>
 
-            <div className="md:hidden w-full">
-                {showSearch && (
+            {showSearch && (
+                <div ref={mobileSearchContainerRef} className="md:hidden w-full relative">
                     <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            const form = e.currentTarget;
-                            const input = form.elements.namedItem('search') as HTMLInputElement;
-                            if (input && input.value.trim()) {
-                                router.get('/shop', { search: input.value.trim() });
-                            }
-                        }}
-                        className="relative bg-white rounded-[20px] shadow-sm border border-black/5 flex items-center px-5 py-3 w-full"
+                        onSubmit={handleSearchSubmit}
+                        className={`relative bg-white rounded-[20px] shadow-sm border transition-all flex items-center px-5 py-3 w-full ${
+                            isOpen ? 'border-[#2a2b30] ring-2 ring-[#2a2b30]/5' : 'border-black/5 hover:border-black/15'
+                        }`}
                     >
-                        <Search className="text-gray-400 w-4 h-4 mr-3 shrink-0" />
+                        <button
+                            type="submit"
+                            aria-label="Submit search"
+                            className="text-gray-400 hover:text-gray-600 mr-3 shrink-0 cursor-pointer flex items-center justify-center p-0 bg-transparent border-none"
+                        >
+                            <Search className="w-4 h-4" />
+                        </button>
                         <input
+                            ref={mobileSearchInputRef}
                             type="text"
                             name="search"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={() => {
+                                if (searchQuery.trim().length >= 2 && suggestions.length > 0) {
+                                    setIsOpen(true);
+                                }
+                            }}
                             placeholder="Search products..."
                             className="bg-transparent border-none outline-none w-full text-[13.5px] font-medium text-gray-700 placeholder:text-[#a8a7a2]"
+                            autoComplete="off"
                         />
+                        {isLoading && (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-gray-400 shrink-0 mr-1.5" />
+                        )}
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                onClick={handleClear}
+                                className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 shrink-0 transition-colors cursor-pointer"
+                                title="Clear search"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        )}
                     </form>
-                )}
-            </div>
+
+                    {/* Autocomplete suggestions dropdown on mobile */}
+                    {renderSuggestionsDropdown()}
+                </div>
+            )}
         </header>
         </div>
     );
