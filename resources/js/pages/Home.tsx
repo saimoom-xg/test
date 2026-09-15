@@ -133,7 +133,7 @@ export default function Home() {
                 </div>
 
                 {/* 4-Column Responsive Product Catalog Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6 pt-4 items-stretch">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6 pt-4 items-stretch">
                     {/* Row 1: First 4 Regular Product Cards */}
                     {row1Products.map((product: any) => (
                         <div key={product.id} className="col-span-1 flex justify-center w-full h-full">
