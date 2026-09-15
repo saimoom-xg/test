@@ -83,10 +83,10 @@ export function useCurrency() {
     const formatPrice = (amount: number | string | null | undefined): string => {
         const converted = convertPrice(amount);
         const symbol = activeCurrency.symbol || '$';
-        const formatted = converted.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        });
+        const rounded = Math.round(converted * 100) / 100;
+        const formatted = rounded % 1 === 0
+            ? Math.floor(rounded).toString()
+            : rounded.toFixed(2);
 
         return `${symbol}${formatted}`;
     };

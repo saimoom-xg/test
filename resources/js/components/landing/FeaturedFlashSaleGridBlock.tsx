@@ -126,7 +126,7 @@ export default function FeaturedFlashSaleGridBlock({
         <div
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
-            className={`col-span-1 sm:col-span-2 lg:col-span-2 relative rounded-[28px] p-5 sm:p-6 overflow-hidden flex flex-col justify-between bg-gradient-to-b from-[#16161B] via-[#121215] to-[#0A0A0C] transition-all duration-300 h-full select-none ${className}`}
+            className={`col-span-2 sm:col-span-2 lg:col-span-2 relative rounded-[28px] p-5 sm:p-6 overflow-hidden flex flex-col justify-between bg-gradient-to-b from-[#16161B] via-[#121215] to-[#0A0A0C] transition-all duration-300 h-full select-none ${className}`}
         >
             {/* Atmosphere & Botanical Leaf Accents inspired by the artisanal dark poster */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -276,7 +276,7 @@ export default function FeaturedFlashSaleGridBlock({
             </div>
 
             {/* 2-Product Display */}
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 flex-1 items-stretch">
+            <div className="relative z-10 grid grid-cols-2 sm:grid-cols-2 gap-3.5 sm:gap-4 flex-1 items-stretch">
                 {visibleProducts.map((product) => {
                     const isAdding = addingId === product.id;
                     const discountPercent =

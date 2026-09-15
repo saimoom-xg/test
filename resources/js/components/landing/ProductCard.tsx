@@ -81,7 +81,7 @@ export default function ProductCard({ product, onAdded }: { product: any; onAdde
                             {formatPrice(product.sale_price || product.price)}
                         </div> 
                         {product.sale_price && (
-                            <div className="text-[11.5px] font-semibold text-gray-400 line-through shrink-0">
+                            <div className="hidden sm:block text-[11.5px] font-semibold text-gray-400 line-through shrink-0">
                                 {formatPrice(product.price)}
                             </div>
                         )}

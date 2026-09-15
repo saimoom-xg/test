@@ -53,13 +53,13 @@ export default function Home() {
 
     // Slicing products for the 4-column catalog grid:
     // Row 1: First 4 regular product cards (fills 4 columns)
-    const row1Products = allProducts.slice(0, 5);
+    const row1Products = allProducts.slice(0, 6);
 
     // Row 2: Next 2 regular cards (pair with 2-column Flash Sale block to complete 4 columns)
-    const row2Products = allProducts.slice(5, 7);
+    const row2Products = allProducts.slice(6, 8);
 
     // Row 3 onwards: All remaining regular product cards
-    const remainingProducts = allProducts.slice(7);
+    const remainingProducts = allProducts.slice(8);
 
     // Build custom promo offers if featured products are present
     const promoOffers = featuredProducts && featuredProducts.length > 0 ? [
